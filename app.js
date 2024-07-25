@@ -4,6 +4,8 @@ const routes = require('./routes')
 const app = express()
 const port = process.env.PORT || 3000
 
+const db = require('./db/models')
+
 const handlebars = require('express-handlebars')
 
 // 註冊 Handlebars 樣板引擎，並指定副檔名為 .hbs
