@@ -1,8 +1,13 @@
 const express = require('express')
 const router = express.Router()
 
+// 載入 admin-controller
+const admin = require('./modules/admin')
+
 // 載入 restaurant-controller
 const restController = require('../controllers/restaurant-controller')
+
+router.use('/admin', admin)
 
 router.get('/restaurants', restController.getRestaurnats)
 
