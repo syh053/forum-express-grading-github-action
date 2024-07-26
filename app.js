@@ -14,6 +14,9 @@ app.engine('.hbs', handlebars({ extname: '.hbs' }))
 // 設定使用 Handlebars 做為樣板引擎
 app.set('view engine', '.hbs')
 
+// 啟用 body-parser
+app.use(express.urlencoded({ extended: true }))
+
 app.use(routes)
 
 app.listen(port, () => {
