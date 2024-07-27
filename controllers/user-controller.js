@@ -5,17 +5,31 @@ const User = db.User
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
-  signUp: (req, res) => {
-    const { name, email, password } = req.body
-    bcrypt.hash(password, 10)
+  signUp: (req, res, next) => {
+    const { name, email, password, passwordCheck } = req.body
+    // 建立正規表達式
+    const regex = /@/g
+
+    if (password !== passwordCheck) throw new Error('"Password Check" do not match "Password" !!')
+
+    if (!regex.test(email)) throw new Error('"email must contain "@" !!')
+
+    User.findOne({ where: { email } })
+      .then(user => {
+        if (user) throw new Error('This email is already exists!!')
+
+        return bcrypt.hash(password, 10)
+      })
       .then(hash => User.create({
         name,
         email,
         password: hash
       }))
       .then(() => {
+        req.flash('success_msg', 'create success!!')
         res.redirect('/signin')
       })
+      .catch(err => next(err)) // 錯誤處理
   }
 
 }

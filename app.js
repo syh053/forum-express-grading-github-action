@@ -17,6 +17,25 @@ app.set('view engine', '.hbs')
 // 啟用 body-parser
 app.use(express.urlencoded({ extended: true }))
 
+// 載入 express-session 套件
+const session = require('express-session')
+
+// 載入 connect-flash 套件
+const flash = require('connect-flash')
+
+// 載入 message
+const message = require('./middlewares/messages')
+
+// 設定 SESSION_SECRET 還境變數
+const SESSION_SECRET = 'secret'
+
+// 設定 session
+app.use(session({ secret: SESSION_SECRET, saveUninitialized: false, resave: false }))
+
+app.use(flash())
+
+app.use(message)
+
 app.use(routes)
 
 app.listen(port, () => {
