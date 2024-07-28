@@ -28,6 +28,8 @@ router.get('/signin', userController.signInPage)
 
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
 
+router.get('/logout', userController.signOut)
+
 // 若匹配不到路由，最後進到從導向路由
 router.use('/', (req, res) => res.redirect('/restaurants'))
 
