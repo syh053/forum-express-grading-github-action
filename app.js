@@ -26,6 +26,9 @@ const flash = require('connect-flash')
 // 載入 message
 const message = require('./middlewares/messages')
 
+// 載入 passport
+const passport = require('passport')
+
 // 設定 SESSION_SECRET 還境變數
 const SESSION_SECRET = 'secret'
 
@@ -33,6 +36,9 @@ const SESSION_SECRET = 'secret'
 app.use(session({ secret: SESSION_SECRET, saveUninitialized: false, resave: false }))
 
 app.use(flash())
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(message)
 
