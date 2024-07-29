@@ -34,7 +34,7 @@ passport.deserializeUser((id, done) => {
   User.findByPk(id)
     .then(user => {
       user = user.toJSON()
-      console.log(user) // 觀察用，可 remark
+      // console.log(user) // 觀察用，可 remark
       return done(null, user)
     })
 })
