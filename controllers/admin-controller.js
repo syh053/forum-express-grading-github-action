@@ -9,6 +9,31 @@ const adminController = {
         err.message = '資料庫錯誤!!'
         next(err)
       })
+  },
+
+  createRestaurant: (req, res) => res.render('admin/create-restaurant'),
+
+  postRestaurant: (req, res, next) => {
+    const { name, tel, address, openingHours, description } = req.body
+
+    if (!name) throw new Error('Missing name!!')
+
+    Restaurant.create({
+      name,
+      tel,
+      address,
+      openingHours,
+      description
+    })
+      .then(() => {
+        req.flash('success_msg', 'restaurant created successfully!!') // 在畫面顯示成功提示
+        res.redirect('/admin/restaurants') // 新增完成後導回後台首頁
+      })
+      .catch(err => {
+        err.name = 'createError'
+        err.message = 'created fail!!'
+        next(err)
+      })
   }
 }
 

@@ -10,8 +10,8 @@ const restController = require('../controllers/restaurant-controller')
 // 載入 user-controller
 const userController = require('../controllers/user-controller')
 
-// 載入 authenticated 狀態
-const { authenticated: auth } = require('../middlewares/auth')
+// 載入 authenticated、authenticatedAdmin 狀態
+const { authenticated: auth, authenticatedAdmin: authAdmin } = require('../middlewares/auth')
 
 // 載入錯誤 message
 const errMessage = require('../middlewares/error-handler')
@@ -19,7 +19,7 @@ const errMessage = require('../middlewares/error-handler')
 // 引入設定好的 passport
 const passport = require('../config/passport')
 
-router.use('/admin', admin)
+router.use('/admin', authAdmin, admin)
 
 router.get('/signup', userController.signUpPage)
 
