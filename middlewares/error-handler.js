@@ -6,8 +6,14 @@ const errHandler = {
       req.flash('error_msg', `${err}`)
     }
 
-    res.redirect('back')
-    next(err)
+    // 依據權限回到各自的 restaurants 頁面
+    if (req.user.isAdmin) {
+      res.redirect('/admin/restaurants')
+      next(err)
+    } else {
+      res.redirect('/restaurants')
+      next(err)
+    }
   }
 }
 

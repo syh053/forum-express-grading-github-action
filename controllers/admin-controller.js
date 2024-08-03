@@ -2,6 +2,19 @@ const { Restaurant } = require('../db/models')
 
 const adminController = {
   getRestaurant: (req, res, next) => {
+    Restaurant.findByPk(req.params.id, { raw: true })
+      .then(restaurant => {
+        if (!restaurant) throw Error("Couldn't find any restaurant!!")
+        res.render('admin/restaurant', { restaurant })
+      })
+      .catch(err => {
+        err.name = '資料庫'
+        err.message = '資料庫查找錯誤!!'
+        next(err)
+      })
+  },
+
+  getRestaurants: (req, res, next) => {
     Restaurant.findAll({ raw: true })
       .then(restaurants => res.render('admin/restaurants', { restaurants }))
       .catch(err => {
