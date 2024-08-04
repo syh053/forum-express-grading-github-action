@@ -16,6 +16,8 @@ router.post('/restaurants', adminController.postRestaurant)
 
 router.put('/restaurants/:id/edit', adminController.putRestaurant)
 
+router.delete('/restaurants/:id', adminController.deleteRestaurant)
+
 router.use('', (req, res) => res.redirect('/admin/restaurants'))
 
 module.exports = router

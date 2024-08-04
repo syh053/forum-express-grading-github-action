@@ -87,6 +87,20 @@ const adminController = {
         err.message = 'created fail!!'
         next(err)
       })
+  },
+
+  deleteRestaurant: (req, res, next) => {
+    Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        console.log(restaurant === null)
+        if (restaurant === null) throw new Error("Couldn't delete any restaurant!!")
+        return restaurant.destroy()
+      })
+      .then(() => {
+        req.flash('success_msg', 'Delete successfully!!')
+        res.redirect('/admin/restaurants')
+      })
+      .catch(err => next(err))
   }
 }
 
