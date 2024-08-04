@@ -43,6 +43,11 @@ app.use(flash())
 app.use(passport.initialize())
 app.use(passport.session())
 
+// 載入 method-override
+const methodOverride = require('method-override')
+
+app.use(methodOverride('_method'))
+
 app.use(message)
 
 app.use(routes)
