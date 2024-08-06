@@ -1,6 +1,8 @@
 const express = require('express')
 const routes = require('./routes')
 
+const path = require('path')
+
 const app = express()
 const port = process.env.PORT || 3000
 
@@ -47,6 +49,8 @@ app.use(passport.session())
 const methodOverride = require('method-override')
 
 app.use(methodOverride('_method'))
+
+app.use('/upload', express.static(path.join(__dirname, '/upload')))
 
 app.use(message)
 

@@ -1,4 +1,5 @@
 const { Restaurant } = require('../db/models')
+const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
 
 const adminController = {
   getRestaurant: (req, res, next) => {
@@ -31,8 +32,14 @@ const adminController = {
     const { name, tel, address, openingHours, description } = req.body
     if (!name) throw new Error('Missing name!!')
 
-    Restaurant.findByPk(req.params.id)
-      .then(restaurant => {
+    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+
+    Promise.all([ // 非同步處理
+      Restaurant.findByPk(req.params.id), // 去資料庫查有沒有這間餐廳
+      localFileHandler(file)
+    ])
+
+      .then(([restaurant, file]) => {
         if (!restaurant) throw Error("Couldn't find any restaurant!!")
 
         return restaurant.update({
@@ -40,10 +47,11 @@ const adminController = {
           tel,
           address,
           openingHours,
-          description
+          description,
+          image: file || restaurant.image // 如果 filePath 是 Truthy (使用者有上傳新照片) 就用 filePath，是 Falsy (使用者沒有上傳新照片) 就沿用原本資料庫內的值
         })
       })
-      .then(restaurnat => {
+      .then(() => {
         req.flash('success_msg', 'restaurant edited successfully!!') // 在畫面顯示成功提示
         res.redirect('/admin/restaurants')
       })
@@ -71,13 +79,17 @@ const adminController = {
 
     if (!name) throw new Error('Missing name!!')
 
-    Restaurant.create({
-      name,
-      tel,
-      address,
-      openingHours,
-      description
-    })
+    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+
+    localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
+      .then(filePath => Restaurant.create({
+        name,
+        tel,
+        address,
+        openingHours,
+        description,
+        image: filePath
+      }))
       .then(() => {
         req.flash('success_msg', 'restaurant created successfully!!') // 在畫面顯示成功提示
         res.redirect('/admin/restaurants') // 新增完成後導回後台首頁
