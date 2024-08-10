@@ -1,4 +1,4 @@
-const { Restaurant } = require('../db/models')
+const { Restaurant, User } = require('../db/models')
 const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
 
 const adminController = {
@@ -72,6 +72,18 @@ const adminController = {
       })
   },
 
+  getUsers: (req, res, next) => {
+    User.findAll({ raw: true })
+      .then(users => {
+        res.render('admin/users', { users })
+      })
+      .catch(err => {
+        err.name = '全部使用者搜尋'
+        err.message = '資料庫錯誤!!'
+        next(err)
+      })
+  },
+
   createRestaurant: (req, res) => res.render('admin/create-restaurant'),
 
   postRestaurant: (req, res, next) => {
@@ -99,6 +111,24 @@ const adminController = {
         err.message = 'created fail!!'
         next(err)
       })
+  },
+
+  patchUser: (req, res, next) => {
+    const { id } = req.params
+    User.findByPk(id)
+      .then(user => {
+        if (!user) throw new Error("Couldn't find any user!!")
+        if (user.name === 'root') throw new Error('禁止變更 root 權限!!')
+
+        return user.update({
+          isAdmin: !user.isAdmin
+        })
+      })
+      .then(() => {
+        req.flash('success_msg', '使用者權限變更成功!!') // 在畫面顯示成功提示
+        res.redirect('/admin/users')
+      })
+      .catch(err => next(err))
   },
 
   deleteRestaurant: (req, res, next) => {

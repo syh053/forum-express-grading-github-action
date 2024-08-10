@@ -14,7 +14,11 @@ router.get('/restaurants/:id', adminController.getRestaurant)
 
 router.get('/restaurants', adminController.getRestaurants)
 
+router.get('/users', adminController.getUsers)
+
 router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
+
+router.patch('/users/:id', adminController.patchUser)
 
 router.put('/restaurants/:id/edit', upload.single('image'), adminController.putRestaurant)
 
