@@ -114,7 +114,7 @@ const createModelMock = (name, data, joinedTableName, sourceData) => {
 
 const createControllerProxy = (path, model) => {
   const controller = proxyquire(path, {
-    '../models': model
+    '../db/models': model
   })
 
   return controller
