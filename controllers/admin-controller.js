@@ -114,11 +114,11 @@ const adminController = {
   },
 
   patchUser: (req, res, next) => {
-    const { id } = req.params.id
+    const { id } = req.params
     return User.findByPk(id)
       .then(user => {
         if (!user) throw new Error("Couldn't find any user!!")
-        if (user.name === 'admin') {
+        if (user.name === 'root') {
           req.flash('error_messages', '禁止變更 root 權限')
           return res.redirect('back')
         }
