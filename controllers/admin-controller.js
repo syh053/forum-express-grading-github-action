@@ -1,9 +1,13 @@
-const { Restaurant, User } = require('../db/models')
+const { Restaurant, User, Category } = require('../db/models')
 const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
 
 const adminController = {
   getRestaurant: (req, res, next) => {
-    return Restaurant.findByPk(req.params.id, { raw: true })
+    return Restaurant.findByPk(req.params.id, {
+      raw: true,
+      nest: true,
+      include: Category
+    })
       .then(restaurant => {
         if (!restaurant) throw Error("Couldn't find any restaurant!!")
         res.render('admin/restaurant', { restaurant })
@@ -63,7 +67,11 @@ const adminController = {
   },
 
   getRestaurants: (req, res, next) => {
-    return Restaurant.findAll({ raw: true })
+    return Restaurant.findAll({
+      raw: true,
+      nest: true,
+      include: Category
+    })
       .then(restaurants => res.render('admin/restaurants', { restaurants }))
       .catch(err => {
         err.name = '全部餐廳搜尋'
