@@ -16,11 +16,11 @@ passport.use(new LocalStrategy({
     where: { email }
   })
     .then(user => {
-      if (!user) return done(null, false, req.flash('error_msg', 'email or passport input error!!'))
+      if (!user) return done(null, false, req.flash('error_messages', 'email or passport input error!!'))
 
       bcrypt.compare(password, user.password)
         .then(ans => {
-          if (!ans) return done(null, false, req.flash('error_msg', 'email or passport input error!!'))
+          if (!ans) return done(null, false, req.flash('error_messages', 'email or passport input error!!'))
           return done(null, user)
         })
     })

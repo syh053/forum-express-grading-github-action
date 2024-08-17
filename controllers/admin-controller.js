@@ -20,10 +20,17 @@ const adminController = {
   },
 
   editRestaurant: (req, res, next) => {
-    return Restaurant.findByPk(req.params.id, { raw: true })
-      .then(restaurant => {
+    return Promise.all([
+      Restaurant.findByPk(req.params.id, {
+        raw: true,
+        nest: true,
+        include: Category
+      }),
+      Category.findAll({ raw: true })
+    ])
+      .then(([restaurant, categories]) => {
         if (!restaurant) throw Error("Couldn't find any restaurant!!")
-        res.render('admin/edit-restaurant', { restaurant })
+        res.render('admin/edit-restaurant', { restaurant, categories })
       })
       .catch(err => {
         err.name = '編輯單筆餐廳'
@@ -33,8 +40,9 @@ const adminController = {
   },
 
   putRestaurant: (req, res, next) => {
-    const { name, tel, address, openingHours, description } = req.body
+    const { name, categoryId, tel, address, openingHours, description } = req.body
     if (!name) throw new Error('Missing name!!')
+    if (!categoryId) throw new Error('Missing name!!')
 
     const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
 
@@ -48,6 +56,7 @@ const adminController = {
 
         return restaurant.update({
           name,
+          categoryId,
           tel,
           address,
           openingHours,
@@ -92,18 +101,24 @@ const adminController = {
       })
   },
 
-  createRestaurant: (req, res) => res.render('admin/create-restaurant'),
+  createRestaurant: (req, res, next) => {
+    Category.findAll({ raw: true })
+      .then(categories => res.render('admin/create-restaurant', { categories }))
+      .catch(err => next(err))
+  },
 
   postRestaurant: (req, res, next) => {
-    const { name, tel, address, openingHours, description } = req.body
+    const { name, categoryId, tel, address, openingHours, description } = req.body
 
     if (!name) throw new Error('Missing name!!')
+    if (!categoryId) throw new Error('Missing name!!')
 
     const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
 
     return localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
       .then(filePath => Restaurant.create({
         name,
+        categoryId,
         tel,
         address,
         openingHours,
