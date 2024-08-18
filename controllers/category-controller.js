@@ -2,8 +2,13 @@ const { Category } = require('../db/models')
 
 const categoryController = {
   getCategories: (req, res, next) => {
-    Category.findAll({ raw: true })
-      .then(categories => res.render('admin/categories', { categories }))
+    const { id } = req.params
+
+    return Promise.all([
+      Category.findAll({ raw: true }),
+      id ? Category.findByPk(id, { raw: true }) : null
+    ])
+      .then(([categories, category]) => res.render('admin/categories', { category, categories }))
       .catch(err => next(err))
   },
 
@@ -16,6 +21,24 @@ const categoryController = {
       .then(() => {
         req.flash('success_messages', '分類建立成功')
         res.redirect('/admin/categories')
+      })
+      .catch(err => next(err))
+  },
+
+  putCategory: (req, res, next) => {
+    const { id } = req.params
+    const { name } = req.body
+
+    if (!name) throw new Error('名稱不得為空!')
+
+    return Category.findByPk(id)
+      .then(category => {
+        if (!category) throw new Error('分類不存在!')
+        return category.update({ name })
+          .then(() => {
+            req.flash('success_messages', '分類修改成功')
+            return res.redirect('/admin/categories')
+          })
       })
       .catch(err => next(err))
   }
