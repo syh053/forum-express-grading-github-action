@@ -6,7 +6,7 @@ const router = express.Router()
 
 const adminController = require('../../controllers/admin-controller')
 
-// 載入 user-controller
+// 載入 categoryController
 const categoryController = require('../../controllers/category-controller')
 
 router.get('/restaurants/create', adminController.createRestaurant)
@@ -28,6 +28,8 @@ router.put('/restaurants/:id/edit', upload.single('image'), adminController.putR
 router.delete('/restaurants/:id', adminController.deleteRestaurant)
 
 router.get('/categories', categoryController.getCategories)
+
+router.post('/categories', categoryController.postCategory)
 
 router.use('', (req, res) => res.redirect('/admin/restaurants'))
 
