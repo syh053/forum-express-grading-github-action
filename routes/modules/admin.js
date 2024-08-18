@@ -6,6 +6,9 @@ const router = express.Router()
 
 const adminController = require('../../controllers/admin-controller')
 
+// 載入 user-controller
+const categoryController = require('../../controllers/category-controller')
+
 router.get('/restaurants/create', adminController.createRestaurant)
 
 router.get('/restaurants/:id/edit', adminController.editRestaurant)
@@ -23,6 +26,8 @@ router.patch('/users/:id', adminController.patchUser)
 router.put('/restaurants/:id/edit', upload.single('image'), adminController.putRestaurant)
 
 router.delete('/restaurants/:id', adminController.deleteRestaurant)
+
+router.get('/categories', categoryController.getCategories)
 
 router.use('', (req, res) => res.redirect('/admin/restaurants'))
 

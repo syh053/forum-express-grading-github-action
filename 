@@ -1,0 +1,56 @@
+[33m8da1a2e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mR02[m[33m)[m exhibit category on admin restaruant pages
+[33m11e8491[m update seed files & fix some errors
+[33m95ff43f[m[33m ([m[1;31morigin/R01[m[33m, [m[1;32mR01[m[33m)[m add category model
+[33m16a1439[m fix R01 related errors
+[33m7b41b47[m build users page & change isAdmin function
+[33m96455d5[m adjust middleware/auth.js
+[33mecb8242[m Merge remote-tracking branch 'upstream/R01-test' into R01
+[33m301d7c9[m[33m ([m[1;32mmain[m[33m)[m build seed data
+[33m24b4470[m add restaurant image
+[33m88b04ed[m admin delete restaurant function
+[33m77c1923[m admin restaurant update function
+[33m1526a24[m implement admin restaurant router
+[33m00e3fc8[m implement restaurant function
+[33m74947a5[m modify admin restaurants page
+[33m8879e2f[m build restaurants table
+[33m22b5022[m user model add isAdmin
+[33m9a0f185[m add header & footer
+[33mb9572ce[m passport init & signin
+[33m0a93540[m flash message & signup verification
+[33m95c6ab4[m user signup
+[33m64c4bc8[m add user model
+[33mb426619[m build sequelize related folders & files
+[33m2aa403a[m build backend router
+[33m193b26f[m build front desk router
+[33m4526b72[m feat: add handlebars
+[33m3e54325[m chore:  use pull_request_target event and checkout pull_request.head
+[33m0c986d8[m Update ci.yml
+[33m66f5895[m modify to the origin version
+[33m346708b[m test: add pull_request_target branches
+[33m2366e5f[m test: add pull_request branches
+[33ma6cf76a[m Merge remote-tracking branch 'upstream/main'
+[33m8414aa9[m test: add pull_request branches
+[33m1b8cd24[m Delete .travis.yml
+[33m57ede1e[m Delete .travis.yml
+[33mfa173a7[m chore: fix code format
+[33md12a942[m Merge commit '1be932b9d1998168679d2cdf5a7a9e2f1d2bca91' into R01-test
+[33m1be932b[m test: fix update method
+[33me2665da[m chore: format code
+[33mfe01b7f[m Update unit-test-helper.js
+[33mb02fbe9[m chore: init github workflow
+[33md5b1553[m chore: init github workflow
+[33meda3b0d[m build: update package version
+[33md6e33f5[m build: update package version
+[33m03c14c0[m correcting typo in comment
+[33m79ff158[m 註解 typo 修正
+[33m7ece79e[m add R01.test.js && unit-test-helper.js
+[33m9eb738a[m update model/index.js path
+[33mcc024f5[m Update init code
+[33m4dbec46[m update
+[33m5a370b3[m Update .travis.yml
+[33m36b6e19[m Update .travis.yml
+[33m2fe2172[m Update package.json config.json
+[33mc5a27a8[m Update README
+[33mc386de7[m install mocha & sequelize-cli
+[33m8730102[m update config
+[33m89f1961[m git init
