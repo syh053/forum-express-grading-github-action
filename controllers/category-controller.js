@@ -35,10 +35,26 @@ const categoryController = {
       .then(category => {
         if (!category) throw new Error('分類不存在!')
         return category.update({ name })
-          .then(() => {
-            req.flash('success_messages', '分類修改成功')
-            return res.redirect('/admin/categories')
-          })
+      })
+      .then(() => {
+        req.flash('success_messages', '分類修改成功')
+        return res.redirect('/admin/categories')
+      })
+      .catch(err => next(err))
+  },
+
+  deleteCategory: (req, res, next) => {
+    const { id } = req.params
+
+    Category.findByPk(id)
+      .then(category => {
+        if (!category) throw new Error('分類不存在!')
+
+        return category.destroy()
+      })
+      .then(() => {
+        req.flash('success_messages', '分類刪除成功!')
+        res.redirect('/admin/categories')
       })
       .catch(err => next(err))
   }
