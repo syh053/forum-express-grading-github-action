@@ -14,7 +14,8 @@ module.exports = {
         tel: faker.phone.phoneNumber(),
         address: faker.address.streetAddress(),
         opening_hours: '08:00',
-        image: `https://loremflickr.com/320/240/beauty_girl/?random=${Math.random() * 100}`,
+        image: `https://loremflickr.com/320/240/restaurants/?random=${Math.random() * 100}`,
+        description: faker.lorem.text(),
         created_at: new Date(),
         updated_at: new Date(),
         category_id: categories[Math.floor(Math.random() * categories.length)].id
