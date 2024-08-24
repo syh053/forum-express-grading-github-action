@@ -31,7 +31,9 @@ router.post('/signin', passport.authenticate('local', { failureRedirect: '/signi
 
 router.get('/logout', userController.signOut)
 
-router.get('/restaurants', auth, restController.getRestaurnats)
+router.get('/restaurants/:id', auth, restController.getRestaurant)
+
+router.get('/restaurants', auth, restController.getRestaurants)
 
 // 若匹配不到路由，最後進到從導向路由
 router.use('/', (req, res) => res.redirect('/restaurants'))

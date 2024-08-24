@@ -14,7 +14,12 @@
                         {{this.name}}
                     </a>
                 </p>
-                <span class="badge bg-secondary">{{this.Category.name}}</span>
+                <span class="badge bg-secondary {{#if this.Category.name}} {{else}} text-danger {{/if}}">
+                {{#if this.Category.name}}
+                    {{this.Category.name}}
+                {{else}}
+                    尚未分類
+                {{/if}}</span>
                 <p class="card-text text-truncate">{{this.description}}</p>
             </div>
         </div>

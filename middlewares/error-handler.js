@@ -7,7 +7,13 @@ const errHandler = {
       req.flash('error_messages', `${err}`)
     }
 
-    res.redirect('back')
+    if (err.message === 'Restaurant not found') {
+      res.redirect('/restaurants')
+    } else if (err.message === '資料庫查找錯誤!!') {
+      res.redirect('/admin/restaurants')
+    } else {
+      res.redirect('back')
+    }
 
     next(err)
   }
