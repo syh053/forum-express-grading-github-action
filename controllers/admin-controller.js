@@ -141,7 +141,7 @@ const adminController = {
     return User.findByPk(id)
       .then(user => {
         if (!user) throw new Error("Couldn't find any user!!")
-        if (user.name === 'root') {
+        if (user.name === 'admin') {
           req.flash('error_messages', '禁止變更 root 權限')
           return res.redirect('back')
         }
