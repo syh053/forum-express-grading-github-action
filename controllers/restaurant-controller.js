@@ -1,21 +1,35 @@
 const { Restaurant, Category } = require('../db/models')
 
 const restaurantController = {
-  getRestaurants: (req, res) => {
-    return Restaurant.findAll({
-      raw: true,
-      nest: true,
-      include: Category
-    })
-      .then(restaurants => {
+  getRestaurants: (req, res, next) => {
+    const categoryId = Number(req.query.categoryId) || ''
+
+    return Promise.all([
+      Restaurant.findAll({
+        where: {
+          ...categoryId ? { categoryId } : {} // 用三元運算子判斷 categoryId 是否存在，若存在傳入 { categoryId }，不存在傳入{}
+        },
+        raw: true,
+        nest: true,
+        include: Category
+      }),
+      Category.findAll({ raw: true })
+    ])
+
+      .then(([restaurants, categories]) => {
         const datas = restaurants.map(restaurant => {
           return {
             ...restaurant,
             description: restaurant.description.slice(0, 50)
           }
         })
-        return res.render('restaurants', { restaurants: datas })
+        return res.render('restaurants', {
+          restaurants: datas,
+          categories,
+          categoryId
+        })
       })
+      .catch(err => next(err))
   },
 
   getRestaurant: (req, res, next) => {
