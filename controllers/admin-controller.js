@@ -76,12 +76,18 @@ const adminController = {
   },
 
   getRestaurants: (req, res, next) => {
-    return Restaurant.findAll({
-      raw: true,
-      nest: true,
-      include: Category
-    })
-      .then(restaurants => res.render('admin/restaurants', { restaurants }))
+    const categoryId = Number(req.query.categoryId) || ''
+
+    Promise.all([
+      Restaurant.findAll({
+        where: { ...categoryId ? { categoryId } : {} },
+        raw: true,
+        nest: true,
+        include: Category
+      }),
+      Category.findAll({ raw: true })
+    ])
+      .then(([restaurants, categories]) => res.render('admin/restaurants', { restaurants, categories, categoryId }))
       .catch(err => {
         err.name = '全部餐廳搜尋'
         err.message = '資料庫錯誤!!'
