@@ -1,5 +1,6 @@
 const { Restaurant, User, Category } = require('../db/models')
 const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
+const { getOffset, getPagination } = require('../helpers/pagination-helper')
 
 const adminController = {
   getRestaurant: (req, res, next) => {
@@ -77,17 +78,28 @@ const adminController = {
 
   getRestaurants: (req, res, next) => {
     const categoryId = Number(req.query.categoryId) || ''
+    const page = Number(req.query.page) || 1
+    const DEFAULT_LIMIT = 10
+    const offset = getOffset(page, DEFAULT_LIMIT)
+    const limit = Number(req.query.limit) || DEFAULT_LIMIT
 
     Promise.all([
-      Restaurant.findAll({
+      Restaurant.findAndCountAll({
         where: { ...categoryId ? { categoryId } : {} },
+        offset,
+        limit,
         raw: true,
         nest: true,
         include: Category
       }),
       Category.findAll({ raw: true })
     ])
-      .then(([restaurants, categories]) => res.render('admin/restaurants', { restaurants, categories, categoryId }))
+      .then(([restaurants, categories]) => res.render('admin/restaurants', {
+        restaurants: restaurants.rows,
+        categories,
+        categoryId,
+        pagination: getPagination(limit, page, restaurants.count)
+      }))
       .catch(err => {
         err.name = '全部餐廳搜尋'
         err.message = '資料庫錯誤!!'
