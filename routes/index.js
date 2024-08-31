@@ -10,6 +10,9 @@ const restController = require('../controllers/restaurant-controller')
 // 載入 user-controller
 const userController = require('../controllers/user-controller')
 
+// 載入 comment-controller
+const commentController = require('../controllers/comment-controller')
+
 // 載入 authenticated、authenticatedAdmin 狀態
 const { authenticated: auth, authenticatedAdmin: authAdmin } = require('../middlewares/auth')
 
@@ -36,6 +39,8 @@ router.get('/restaurants/:id/dashboard', auth, restController.getDashboard)
 router.get('/restaurants/:id', auth, restController.getRestaurant)
 
 router.get('/restaurants', auth, restController.getRestaurants)
+
+router.post('/comments', auth, commentController.postComment) // 建立評論路由
 
 // 若匹配不到路由，最後進到從導向路由
 router.use('/', (req, res) => res.redirect('/restaurants'))
