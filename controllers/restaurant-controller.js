@@ -48,7 +48,12 @@ const restaurantController = {
     Restaurant.findByPk(id, {
       include: [
         Category,
-        { model: Comment, include: User }
+        {
+          model: Comment,
+          include: User,
+          separate: true,
+          order: [['createdAt', 'DESC']]
+        }
       ]
     })
       .then(restaurant => {
@@ -64,14 +69,17 @@ const restaurantController = {
     const { id } = req.params
 
     return Restaurant.findByPk(id, {
-      raw: true,
-      nest: true,
-      include: Category
+      // raw: true,
+      // nest: true,
+      include: [
+        Category,
+        Comment
+      ]
     })
       .then(restaurant => {
         if (!restaurant) throw new Error('Restaurant not found')
 
-        return res.render('dashboard', { restaurant })
+        return res.render('dashboard', { restaurant: restaurant.toJSON() })
       })
       .catch(err => next(err))
   }

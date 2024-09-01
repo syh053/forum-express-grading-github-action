@@ -8,7 +8,8 @@ const handlebarsHelpers = {
   fromNow: date => dayjs(date).fromNow(),
   ifCond: function (a, b, options) {
     return a === b ? options.fn(this) : options.inverse(this)
-  }
+  },
+  count: datas => datas.length
 }
 
 module.exports = handlebarsHelpers
