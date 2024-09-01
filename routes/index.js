@@ -42,6 +42,8 @@ router.get('/restaurants', auth, restController.getRestaurants)
 
 router.post('/comments', auth, commentController.postComment) // 建立評論路由
 
+router.delete('/comments/:id', authAdmin, commentController.deleteComment) // 刪除評論路由
+
 // 若匹配不到路由，最後進到從導向路由
 router.use('/', (req, res) => res.redirect('/restaurants'))
 
