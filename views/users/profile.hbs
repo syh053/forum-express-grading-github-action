@@ -1,0 +1,18 @@
+{{> message}}
+
+<div class="row bg-body border">
+
+  <div class="col-md-4">
+    <img class="img-responsive center-block rounded-circle" src="{{user.image}}"
+      style="width: 300px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+  </div>
+
+  <div class="col-md-8 mt-3">
+    <h3>{{user.name}}</h3>
+    <p>{{user.email}}</p>
+    <a href="/users/{{user.id}}/edit">
+      <button type="button" class="btn btn-primary">edit</button>
+    </a>
+  </div>
+
+</div>

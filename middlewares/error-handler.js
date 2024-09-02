@@ -11,6 +11,8 @@ const errHandler = {
       res.redirect('/restaurants')
     } else if (err.message === '資料庫查找錯誤!!') {
       res.redirect('/admin/restaurants')
+    } else if (err.message === '無法修改他人帳號!') {
+      res.redirect(`/users/${req.user.id}`)
     } else {
       res.redirect('back')
     }

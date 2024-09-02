@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs')
 const db = require('../db/models')
 const User = db.User
 
+const localFileHandler = require('../helpers/file-helpers')
+
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
   signUp: (req, res, next) => {
@@ -45,6 +47,60 @@ const userController = {
     req.flash('success_messages', 'logout successfully!')
     req.logout()
     res.redirect('/signin')
+  },
+
+  getUser: (req, res, next) => {
+    const { id } = req.params
+
+    return User.findByPk(id, { raw: true })
+      .then(user => {
+        if (!user) throw new Error("User didn't found!")
+
+        res.render('users/profile', { user })
+      })
+      .catch(err => next(err))
+  },
+
+  editUser: (req, res, next) => {
+    return User.findByPk(req.params.id, { raw: true })
+      .then(user => {
+        if (!user) throw new Error("User didn't found!")
+        // if (Number(req.params.id) !== req.user.id) throw new Error('無法修改他人帳號!')
+
+        res.render('users/edit', { user })
+      })
+      .catch(err => next(err))
+  },
+
+  putUser: (req, res, next) => {
+    const { id } = req.params
+    const { name } = req.body
+
+    if (!name) throw new Error('name field is required!')
+
+    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+
+    return Promise.all([ // 非同步處理
+      User.findByPk(id), // 去資料庫查有沒有這間餐廳
+      localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
+    ])
+      .then(([user, file]) => {
+        if (!user) throw Error("User didn't exist!")
+        if (Number(id) !== req.user.id) throw new Error('不能修改別人的資料!')
+
+        return user.update({
+          name,
+          email: user.email,
+          password: user.password,
+          isAdmin: user.isAdmin,
+          image: file || user.image // // 如果 file 是 Truthy (使用者有上傳新照片) 就用 file，如果是 Falsy (使用者沒有上傳新照片) 就沿用原本資料庫內的值
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '使用者資料編輯成功') // 在畫面顯示成功提示
+        res.redirect(`/users/${id}`)
+      })
+      .catch(err => next(err))
   }
 
 }

@@ -1,8 +1,11 @@
 const express = require('express')
 const router = express.Router()
 
-// 載入 admin-controller
+// 載入 admin
 const admin = require('./modules/admin')
+
+// 載入 user
+const user = require('./user')
 
 // 載入 restaurant-controller
 const restController = require('../controllers/restaurant-controller')
@@ -23,6 +26,8 @@ const errMessage = require('../middlewares/error-handler')
 const passport = require('../config/passport')
 
 router.use('/admin', authAdmin, admin)
+
+router.use('/users', auth, user) // user 路由
 
 router.get('/signup', userController.signUpPage)
 
