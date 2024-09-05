@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const db = require('../db/models')
-const User = db.User
+const { User, Restaurant, Comment } = require('../db/models')
 
 const localFileHandler = require('../helpers/file-helpers')
 
@@ -52,11 +51,21 @@ const userController = {
   getUser: (req, res, next) => {
     const { id } = req.params
 
-    return User.findByPk(id, { raw: true })
+    return User.findByPk(id, {
+      // raw: true,
+      include: [
+        {
+          model: Comment,
+          include: Restaurant,
+          separate: true,
+          order: [['createdAt', 'DESC']]
+        }
+      ]
+    })
       .then(user => {
         if (!user) throw new Error("User didn't found!")
 
-        res.render('users/profile', { user })
+        res.render('users/profile', { user: user.toJSON() })
       })
       .catch(err => next(err))
   },

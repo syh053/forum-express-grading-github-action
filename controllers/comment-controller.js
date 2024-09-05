@@ -18,7 +18,10 @@ const commentController = {
 
         return Comment.create({ text, userId, restaurantId })
       })
-      .then(() => res.redirect(`/restaurants/${restaurantId}`))
+      .then(() => {
+        req.flash('success_messages', '成功留言!')
+        res.redirect(`/restaurants/${restaurantId}`)
+      })
       .catch(err => next(err))
   },
 
@@ -31,7 +34,10 @@ const commentController = {
 
         return comment.destroy()
       })
-      .then(deletedComment => res.redirect(`/restaurants/${deletedComment.restaurantId}`))
+      .then(deletedComment => {
+        req.flash('error_messages', '成功刪除留言!')
+        res.redirect(`/restaurants/${deletedComment.restaurantId}`)
+      })
       .catch(err => next(err))
   }
 }
