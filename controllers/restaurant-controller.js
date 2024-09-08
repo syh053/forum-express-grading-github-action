@@ -26,10 +26,13 @@ const restaurantController = {
     ])
 
       .then(([restaurants, categories]) => {
+        const favoritedRestaurants = req.user && req.user.FavoritedRestaurants.map(restaurants => restaurants.id)
+
         const datas = restaurants.rows.map(restaurant => {
           return {
             ...restaurant,
-            description: restaurant.description.slice(0, 50)
+            description: restaurant.description.slice(0, 50),
+            isFavorited: favoritedRestaurants.includes(restaurant.id)
           }
         })
         return res.render('restaurants', {
@@ -45,7 +48,7 @@ const restaurantController = {
   getRestaurant: (req, res, next) => {
     const { id } = req.params
 
-    Restaurant.findByPk(id, {
+    return Restaurant.findByPk(id, {
       include: [
         Category,
         {
@@ -53,6 +56,10 @@ const restaurantController = {
           include: User,
           separate: true,
           order: [['createdAt', 'DESC']]
+        },
+        {
+          model: User,
+          as: 'FavoritedUsers'
         }
       ]
     })
@@ -61,7 +68,14 @@ const restaurantController = {
 
         return restaurant.increment('viewCounts')
       })
-      .then(restaurant => res.render('restaurant', { restaurant: restaurant.toJSON() }))
+      .then(restaurant => {
+        const isFavorited = restaurant.FavoritedUsers.some(fs => fs.id === req.user.id)
+
+        return res.render('restaurant', {
+          restaurant: restaurant.toJSON(),
+          isFavorited
+        })
+      })
       .catch(err => next(err))
   },
 
