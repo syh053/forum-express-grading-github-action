@@ -1,12 +1,12 @@
-const dayjs = require('dayjs')
-const relativeTime = require('dayjs/plugin/relativeTime')
+let k
 
-dayjs.extend(relativeTime)
+const x = [1, 2, 3, 4, 5]
 
-require('dayjs/locale/zh-tw')
+const y = k && x.map(num => num * 10)
 
-dayjs.locale('zh-tw')
+const result = y.includes(10)
 
-const relativeDate = dayjs('1999-01-01').fromNow()
+console.log(y)
+console.log(typeof y)
 
-console.log(relativeDate)
+console.log(result)

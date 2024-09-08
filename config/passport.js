@@ -1,8 +1,7 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
-const db = require('../db/models')
-const User = db.User
+const { User, Restaurant } = require('../db/models')
 
 const bcrypt = require('bcryptjs')
 
@@ -31,12 +30,14 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser((id, done) => {
-  User.findByPk(id)
-    .then(user => {
-      user = user.toJSON()
-      // console.log(user) // 觀察用，可 remark
-      return done(null, user)
-    })
+  User.findByPk(id, {
+    // nest: true,
+    include: [
+      { model: Restaurant, as: 'FavoritedRestaurants' }
+    ]
+  })
+    .then(user => done(null, user.toJSON()))
+    .catch(err => done(err))
 })
 
 module.exports = passport
