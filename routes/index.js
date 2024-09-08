@@ -7,6 +7,9 @@ const admin = require('./modules/admin')
 // 載入 user
 const user = require('./user')
 
+// 載入 favorite
+const favorite = require('./favorite')
+
 // 載入 restaurant-controller
 const restController = require('../controllers/restaurant-controller')
 
@@ -28,6 +31,8 @@ const passport = require('../config/passport')
 router.use('/admin', authAdmin, admin)
 
 router.use('/users', auth, user) // user 路由
+
+router.use('/favorite', auth, favorite)
 
 router.get('/signup', userController.signUpPage)
 
