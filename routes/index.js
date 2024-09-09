@@ -10,6 +10,9 @@ const user = require('./user')
 // 載入 favorite
 const favorite = require('./favorite')
 
+// 載入 like
+const like = require('./like')
+
 // 載入 restaurant-controller
 const restController = require('../controllers/restaurant-controller')
 
@@ -33,6 +36,8 @@ router.use('/admin', authAdmin, admin)
 router.use('/users', auth, user) // user 路由
 
 router.use('/favorite', auth, favorite)
+
+router.use('/like', auth, like) // like 路由
 
 router.get('/signup', userController.signUpPage)
 
