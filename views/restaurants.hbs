@@ -36,8 +36,10 @@
                 {{/if}}</span>
                 <p class="card-text text-truncate">{{this.description}}</p>
 
-                {{!-- 收藏按鈕 --}}
+                
                 <div class="d-flex">
+
+                    {{!-- 收藏按鈕 --}}
                     {{#if this.isFavorited}}
                         <form action="/favorite/{{this.id}}?_method=DELETE" method="POST">
                             <button type="submit" class="btn btn-danger m-1">移除最愛</button>
@@ -47,8 +49,18 @@
                             <button type="submit" class="btn btn-primary m-1">加到最愛</button>
                         </form>
                     {{/if}}
-                </div>
                 
+                    {{!-- like 按鈕 --}}
+                    {{#if this.isLiked}}
+                        <form action="/like/{{this.id}}?_method=DELETE" method="POST">
+                            <button type="submit" class="btn btn-danger m-1">unlike</button>
+                        </form>
+                    {{else}}
+                        <form action="/like/{{this.id}}" method="POST">
+                            <button type="submit" class="btn btn-primary m-1">like</button>
+                        </form>
+                    {{/if}}
+                </div>
             </div>
         </div>
     </div>

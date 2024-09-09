@@ -27,12 +27,14 @@ const restaurantController = {
 
       .then(([restaurants, categories]) => {
         const favoritedRestaurants = req.user && req.user.FavoritedRestaurants.map(restaurants => restaurants.id)
+        const likedRestaurants = req.user && req.user.LikeRestaurants.map(restaurant => restaurant.id)
 
         const datas = restaurants.rows.map(restaurant => {
           return {
             ...restaurant,
             description: restaurant.description.slice(0, 50),
-            isFavorited: favoritedRestaurants.includes(restaurant.id)
+            isFavorited: favoritedRestaurants.includes(restaurant.id),
+            isLiked: likedRestaurants.includes(restaurant.id)
           }
         })
         return res.render('restaurants', {
@@ -60,6 +62,10 @@ const restaurantController = {
         {
           model: User,
           as: 'FavoritedUsers'
+        },
+        {
+          model: User,
+          as: 'LikeUsers'
         }
       ]
     })
@@ -70,10 +76,12 @@ const restaurantController = {
       })
       .then(restaurant => {
         const isFavorited = restaurant.FavoritedUsers.some(fs => fs.id === req.user.id)
+        const isLiked = restaurant.LikeUsers.some(ls => ls.id === req.user.id)
 
         return res.render('restaurant', {
           restaurant: restaurant.toJSON(),
-          isFavorited
+          isFavorited,
+          isLiked
         })
       })
       .catch(err => next(err))
