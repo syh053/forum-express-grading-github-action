@@ -34,7 +34,9 @@ passport.deserializeUser((id, done) => {
     // nest: true,
     include: [
       { model: Restaurant, as: 'FavoritedRestaurants' },
-      { model: Restaurant, as: 'LikeRestaurants' }
+      { model: Restaurant, as: 'LikeRestaurants' },
+      { model: User, as: 'Followings' },
+      { model: User, as: 'Followers' }
     ]
   })
     .then(user => done(null, user.toJSON()))

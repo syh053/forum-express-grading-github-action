@@ -21,6 +21,16 @@ module.exports = (sequelize, DataTypes) => {
         as: 'LikeRestaurants', // 幫這個關聯取個名稱
         foreignKey: 'userId' // 對 Favorite 表設定 FK
       })
+      User.belongsToMany(models.User, {
+        through: models.Followship,
+        as: 'Followings',
+        foreignKey: 'followerId'
+      })
+      User.belongsToMany(models.User, {
+        through: models.Followship,
+        as: 'Followers',
+        foreignKey: 'followingId'
+      })
     }
   };
   User.init({
