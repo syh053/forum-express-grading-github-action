@@ -194,7 +194,31 @@ const userController = {
         res.redirect('back')
       })
       .catch(err => next(err))
+  },
+
+  getTopUsers: (req, res, next) => {
+    return User.findAll({ // 撈出所有 User 與 followers 資料
+      // raw: true,
+      // nest: true,
+      include: [{
+        model: User,
+        as: 'Followers'
+      }]
+    })
+      .then(users => {
+        // 整理 users 資料，把每個 user 項目都拿出來處理一次，並把新陣列儲存在 result 裡
+        const result = users
+          .map(user => ({
+            ...user.toJSON(), // 解構 user 物件
+            followerCount: user.Followers.length, // 在每個 user 新增 followerCount 屬性
+            isFollowed: req.user.Followings.some(f => f.id === user.id)
+          }))
+          .sort((a, b) => b.followerCount - a.followerCount) // 利用 sort() 方法針對 followerCount 整理排序
+
+        res.render('users/top-users', { users: result })
+      })
   }
+
 }
 
 module.exports = userController
