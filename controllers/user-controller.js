@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 
-const { User, Restaurant, Comment, Favorite, Like } = require('../db/models')
+const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../db/models')
 
 const localFileHandler = require('../helpers/file-helpers')
 
@@ -217,6 +217,57 @@ const userController = {
 
         res.render('users/top-users', { users: result })
       })
+  },
+
+  addFollowing: (req, res, next) => {
+    const { userId } = req.params
+
+    return Promise.all([
+      User.findByPk(userId, { raw: true }),
+      Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: userId
+        }
+      })
+    ])
+      .then(([user, followship]) => {
+        if (!user) throw new Error("User didn't exist!")
+        if (followship) throw new Error('You are already following this user!')
+
+        return Followship.create({
+          followerId: req.user.id,
+          followingId: userId
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '追蹤成功!')
+        res.redirect('back')
+      })
+      .catch(err => next(err))
+  },
+
+  removeFollowing: (req, res, next) => {
+    const { userId } = req.params
+
+    return Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: userId
+      }
+    })
+      .then(followship => {
+        if (!followship) throw new Error("You haven't followed this user!")
+
+        return followship.destroy({
+          where: { followingId: userId }
+        })
+      })
+      .then(() => {
+        req.flash('success_messages', '取消追蹤成功!')
+        res.redirect('back')
+      })
+      .catch(err => next(err))
   }
 
 }

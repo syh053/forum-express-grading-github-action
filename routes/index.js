@@ -61,6 +61,10 @@ router.post('/comments', auth, commentController.postComment) // 建立評論路
 
 router.delete('/comments/:id', authAdmin, commentController.deleteComment) // 刪除評論路由
 
+router.post('/following/:userId', auth, userController.addFollowing) // 追蹤使用者
+
+router.delete('/following/:userId', auth, userController.removeFollowing)
+
 // 若匹配不到路由，最後進到從導向路由
 router.use('/', (req, res) => res.redirect('/restaurants'))
 
