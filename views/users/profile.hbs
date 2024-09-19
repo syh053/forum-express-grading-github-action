@@ -7,12 +7,41 @@
       style="width: 300px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
   </div>
 
-  <div class="col-md-8 mt-3">
+  <div class="col-md-8 mt-3 pb-3">
     <h3>{{user.name}}</h3>
     <p>{{user.email}}</p>
+
+    {{!-- 評論的餐廳 --}}
+    <p>
+      {{#if comments.length}}
+      {{comments.length}} 已評論餐廳
+      {{else}}
+      尚未有評論
+      {{/if}}
+    </p>
+
+    {{!-- 收藏的餐廳 --}}
     <p>
       {{#if user.Comments.length}}
-      {{user.Comments.length}} 已評論餐廳
+      {{user.FavoritedRestaurants.length}} 收藏的餐廳
+      {{else}}
+      尚未有評論
+      {{/if}}
+    </p>
+
+    {{!-- followings --}}
+    <p>
+      {{#if user.Comments.length}}
+      {{user.Followings.length}} followings (追蹤者)
+      {{else}}
+      尚未有評論
+      {{/if}}
+    </p>
+
+    {{!-- followers --}}
+    <p>
+      {{#if user.Comments.length}}
+      {{user.Followers.length}} followers (追蹤者)
       {{else}}
       尚未有評論
       {{/if}}
@@ -26,21 +55,84 @@
 
 <div class="row">
 
-  <h4 class="d-flex align-items-center bg-dark-subtle border border-bottom-0 my-0" style="min-height: 50px;">
-    {{#if user.Comments.length}}
-    {{user.Comments.length}} 已評論餐廳
-    {{else}}
-    尚未有評論
-    {{/if}}
-  </h4>
+  {{!-- 追蹤使用者數 --}}
+  <div class="col-md-5">
 
-  <div class="d-flex flex-wrap align-items-center bg-body border p-3" style="margin: 0 auto;">
-    {{#each user.Comments}}
-    <a class="mb-3" href="/restaurants/{{this.Restaurant.id}}">
-      <img class="img-responsive center-block me-3" src="{{this.Restaurant.image}}"
-        style="width: 100px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
-    </a>
-    {{/each}}
+    <h4 class="d-flex align-items-center bg-dark-subtle border border-bottom-0 my-0 p-2" style="min-height: 50px;">
+      {{#if user.Followings.length}}
+      {{user.Followings.length}} followings (追蹤者)
+      {{else}}
+      尚未追蹤使用者
+      {{/if}}
+    </h4>
+
+    <div class="d-flex flex-wrap align-items-center bg-body border p-3" style="margin: 0 auto;">
+      {{#each user.Followings}}
+      <a class="mb-3" href="/users/{{this.id}}">
+        <img class="img-responsive center-block me-3" src="{{this.image}}"
+          style="width: 100px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      </a>
+      {{/each}}
+    </div>
+
+    {{!-- 被使用者追蹤數 --}}
+    <h4 class="d-flex align-items-center bg-dark-subtle border border-bottom-0 my-0 p-2" style="min-height: 50px;">
+      {{#if user.Followers.length}}
+      {{user.Followers.length}} followers (追蹤者)
+      {{else}}
+      無使用者追蹤
+      {{/if}}
+    </h4>
+
+    <div class="d-flex flex-wrap align-items-center bg-body border p-3" style="margin: 0 auto;">
+      {{#each user.Followers}}
+      <a class="mb-3" href="/users/{{this.id}}">
+        <img class="img-responsive center-block me-3" src="{{this.image}}"
+          style="width: 100px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      </a>
+      {{/each}}
+    </div>
+
+  </div>
+
+  {{!-- 餐廳評論 --}}
+  <div class="col-md-7">
+
+    <h4 class="d-flex align-items-center bg-dark-subtle border border-bottom-0 my-0 p-2" style="min-height: 50px;">
+      {{#if comments.length}}
+      {{comments.length}} 已評論餐廳
+      {{else}}
+      尚未有評論
+      {{/if}}
+    </h4>
+
+    <div class="d-flex flex-wrap align-items-center bg-body border p-3" style="margin: 0 auto;">
+      {{#each comments}}
+      <a class="mb-3" href="/restaurants/{{this.Restaurant.id}}">
+        <img class="img-responsive center-block me-3" src="{{this.Restaurant.image}}"
+          style="width: 100px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      </a>
+      {{/each}}
+    </div>
+
+    {{!-- 餐廳收藏 --}}
+    <h4 class="d-flex align-items-center bg-dark-subtle border border-bottom-0 my-0 p-2" style="min-height: 50px;">
+      {{#if user.FavoritedRestaurants.length}}
+      {{user.FavoritedRestaurants.length}} 收藏的餐廳
+      {{else}}
+      尚未有收藏的餐廳
+      {{/if}}
+    </h4>
+
+    <div class="d-flex flex-wrap align-items-center bg-body border p-3" style="margin: 0 auto;">
+      {{#each user.FavoritedRestaurants}}
+      <a class="mb-3" href="/restaurants/{{this.id}}">
+        <img class="img-responsive center-block me-3" src="{{this.image}}"
+          style="width: 100px; max-height: 300px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+      </a>
+      {{/each}}
+    </div>
+
   </div>
 
 </div>

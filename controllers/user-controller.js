@@ -59,13 +59,44 @@ const userController = {
           include: Restaurant,
           separate: true,
           order: [['createdAt', 'DESC']]
+          // group: ['Restaurant.id'] // 用 sequelize 方法剔除重複評論的餐廳
+        },
+        {
+          model: User,
+          as: 'Followers'
+        },
+        {
+          model: User,
+          as: 'Followings'
+        },
+        {
+          model: Restaurant,
+          as: 'FavoritedRestaurants'
         }
       ]
     })
       .then(user => {
         if (!user) throw new Error("User didn't found!")
 
-        res.render('users/profile', { user: user.toJSON() })
+        /*
+        去除重複的餐廳 :
+        用 filter 遍歷每個 comments 內的餐廳 id，再用 if 判斷 temp 是否有重複的 key 值，
+        若沒有則新增 key 到 temp 中，並把 comment 加到 newComments。
+        */
+        const comments = user.toJSON().Comments
+
+        const temp = {}
+
+        const newComments = comments.filter(comment => {
+          const restaurantId = comment.Restaurant.id
+          if (!(restaurantId in temp)) {
+            temp[restaurantId] = ''
+            return true
+          }
+          return false
+        })
+
+        res.render('users/profile', { user: user.toJSON(), comments: newComments })
       })
       .catch(err => next(err))
   },
