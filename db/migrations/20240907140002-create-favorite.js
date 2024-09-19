@@ -11,7 +11,7 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      restaurnat_id: {
+      restaurant_id: {
         type: Sequelize.INTEGER
       },
       created_at: {
