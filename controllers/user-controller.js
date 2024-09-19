@@ -139,7 +139,7 @@ const userController = {
     const { restaurantId } = req.params
     const userId = req.user.id
 
-    Favorite.findOne({
+    return Favorite.findOne({
       where: { userId, restaurantId }
     })
       .then(async favorite => {
