@@ -1,52 +1,12 @@
 const { Restaurant, User, Category, Comment } = require('../../db/models') // 載入 Restaurant、User、Category、Comment 物件
 
-const { getOffset, getPagination } = require('../../helpers/pagination-helper') // 載入分頁 helper
+const restaurantServices = require('../../services/restaurant-services') // 載入 restaurantServices
 
 const { getUser } = require('../../helpers/auth-helpers') // 載入 getUser
 
 const restaurantController = {
   getRestaurants: (req, res, next) => {
-    const page = Number(req.query.page) || 1
-    const categoryId = Number(req.query.categoryId) || ''
-
-    const DEFAULT_LIMIT = 9 // 指定 limit 為 9，避免 magic number!!
-    const limit = Number(req.query.limit) || DEFAULT_LIMIT
-    const offset = getOffset(page, DEFAULT_LIMIT)
-
-    return Promise.all([
-      Restaurant.findAndCountAll({
-        where: {
-          ...categoryId ? { categoryId } : {} // 用三元運算子判斷 categoryId 是否存在，若存在傳入 { categoryId }，不存在傳入{}
-        },
-        offset,
-        limit,
-        raw: true,
-        nest: true,
-        include: Category
-      }),
-      Category.findAll({ raw: true })
-    ])
-
-      .then(([restaurants, categories]) => {
-        const favoritedRestaurants = req.user && req.user.FavoritedRestaurants.map(restaurants => restaurants.id)
-        const likedRestaurants = req.user && req.user.LikeRestaurants.map(restaurant => restaurant.id)
-
-        const datas = restaurants.rows.map(restaurant => {
-          return {
-            ...restaurant,
-            description: restaurant.description.slice(0, 50),
-            isFavorited: favoritedRestaurants.includes(restaurant.id),
-            isLiked: likedRestaurants.includes(restaurant.id)
-          }
-        })
-        return res.render('restaurants', {
-          restaurants: datas,
-          categories,
-          categoryId,
-          pagination: getPagination(limit, page, restaurants.count) // 傳入分頁參數
-        })
-      })
-      .catch(err => next(err))
+    restaurantServices.getRestaurants(req, (err, result) => err ? next(err) : res.render('restaurants', result))
   },
 
   getRestaurant: (req, res, next) => {
