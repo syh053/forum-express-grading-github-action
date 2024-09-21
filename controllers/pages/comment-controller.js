@@ -1,4 +1,4 @@
-const { Comment, User, Restaurant } = require('../db/models')
+const { Comment, User, Restaurant } = require('../../db/models') // 載入 Comment、User、Restaurant 物件
 
 const commentController = {
   postComment: (req, res, next) => {

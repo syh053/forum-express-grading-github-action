@@ -1,13 +1,12 @@
 const express = require('express')
 
-const upload = require('../../middlewares/multer')
+const upload = require('../../../middlewares/multer')
 
 const router = express.Router()
 
-const adminController = require('../../controllers/admin-controller')
+const adminController = require('../../../controllers/pages/admin-controller')
 
-// 載入 categoryController
-const categoryController = require('../../controllers/category-controller')
+const categoryController = require('../../../controllers/pages/category-controller') // 載入 categoryController
 
 router.get('/restaurants/create', adminController.createRestaurant)
 

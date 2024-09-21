@@ -1,5 +1,5 @@
 const express = require('express')
-const routes = require('./routes')
+const { pages } = require('./routes')
 
 const path = require('path')
 
@@ -54,7 +54,7 @@ app.use('/upload', express.static(path.join(__dirname, '/upload')))
 
 app.use(message)
 
-app.use(routes)
+app.use(pages)
 
 app.listen(port, () => {
   console.info(`Example app listening on port ${port}!`)

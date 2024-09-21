@@ -1,4 +1,4 @@
-const { Category } = require('../db/models')
+const { Category } = require('../../db/models') // 載入 Category 物件
 
 const categoryController = {
   getCategories: (req, res, next) => {

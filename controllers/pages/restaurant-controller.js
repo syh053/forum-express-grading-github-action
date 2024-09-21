@@ -1,8 +1,8 @@
-const { Restaurant, User, Category, Comment } = require('../db/models')
-// 載入分頁 helper
-const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { Restaurant, User, Category, Comment } = require('../../db/models') // 載入 Restaurant、User、Category、Comment 物件
 
-const { getUser } = require('../helpers/auth-helpers')
+const { getOffset, getPagination } = require('../../helpers/pagination-helper') // 載入分頁 helper
+
+const { getUser } = require('../../helpers/auth-helpers') // 載入 getUser
 
 const restaurantController = {
   getRestaurants: (req, res, next) => {

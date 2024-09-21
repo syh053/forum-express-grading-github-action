@@ -1,6 +1,6 @@
-const { Restaurant, User, Category } = require('../db/models')
-const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
-const { getOffset, getPagination } = require('../helpers/pagination-helper')
+const { Restaurant, User, Category } = require('../../db/models') // 載入 Restaurant、User、Category 物件
+const localFileHandler = require('../../helpers/file-helpers') // 載入 file-helper
+const { getOffset, getPagination } = require('../../helpers/pagination-helper') // 載入 pagination-helper
 
 const adminController = {
   getRestaurant: (req, res, next) => {
