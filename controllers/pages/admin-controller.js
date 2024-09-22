@@ -99,32 +99,14 @@ const adminController = {
   },
 
   postRestaurant: (req, res, next) => {
-    const { name, categoryId, tel, address, openingHours, description } = req.body
+    console.log(req.body)
+    adminServices.postRestaurant(req, (err, result) => {
+      if (err) return next(err)
 
-    if (!name) throw new Error('Missing name!!')
-    if (!categoryId) throw new Error('Missing name!!')
-
-    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
-
-    return localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
-      .then(filePath => Restaurant.create({
-        name,
-        categoryId,
-        tel,
-        address,
-        openingHours,
-        description,
-        image: filePath
-      }))
-      .then(() => {
-        req.flash('success_messages', 'restaurant created successfully!!') // 在畫面顯示成功提示
-        res.redirect('/admin/restaurants') // 新增完成後導回後台首頁
-      })
-      .catch(err => {
-        err.name = 'createError'
-        err.message = 'created fail!!'
-        next(err)
-      })
+      req.flash('success_messages', '新餐廳建立成功')
+      req.session.createdData = result
+      res.redirect('/admin/restaurants')
+    })
   },
 
   patchUser: (req, res, next) => {

@@ -34,7 +34,7 @@ const restaurantServices = {
         const datas = restaurants.rows.map(restaurant => {
           return {
             ...restaurant,
-            description: restaurant.description.slice(0, 50),
+            description: restaurant.description?.slice(0, 50),
             isFavorited: favoritedRestaurants.includes(restaurant.id),
             isLiked: likedRestaurants.includes(restaurant.id)
           }

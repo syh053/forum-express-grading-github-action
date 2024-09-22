@@ -2,6 +2,8 @@ const { Restaurant, Category } = require('../db/models') // 載入 Restaurant、
 
 const { getOffset, getPagination } = require('../helpers/pagination-helper') // 載入 pagination-helper
 
+const localFileHandler = require('../helpers/file-helpers') // 載入 file-helper
+
 const adminServices = {
   getRestaurants: (req, cb) => {
     const categoryId = Number(req.query.categoryId) || ''
@@ -27,6 +29,29 @@ const adminServices = {
         categoryId,
         pagination: getPagination(limit, page, restaurants.count)
       }))
+      .catch(err => cb(err))
+  },
+
+  postRestaurant: (req, cb) => {
+    console.log(req.body)
+    const { name, categoryId, tel, address, openingHours, description } = req.body
+
+    if (!name) throw new Error('Missing name!!')
+    if (!categoryId) throw new Error('Missing categoryId!!')
+
+    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+
+    return localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
+      .then(filePath => Restaurant.create({
+        name,
+        categoryId,
+        tel,
+        address,
+        openingHours,
+        description,
+        image: filePath
+      }))
+      .then(newRestaurant => cb(null, { restaurant: newRestaurant }))
       .catch(err => cb(err))
   },
 

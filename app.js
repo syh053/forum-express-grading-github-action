@@ -21,6 +21,7 @@ app.set('view engine', '.hbs')
 
 // 啟用 body-parser
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 // 載入 express-session 套件
 const session = require('express-session')

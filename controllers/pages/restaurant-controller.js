@@ -89,9 +89,9 @@ const restaurantController = {
         const datas = restaurants.map(restaurant => (
           {
             ...restaurant,
-            description: restaurant.description.length < 50
+            description: restaurant.description?.length < 50
               ? restaurant.description
-              : restaurant.description.slice(0, 50) + '...'
+              : restaurant.description?.slice(0, 50) + '...'
           }
         ))
 
@@ -115,9 +115,9 @@ const restaurantController = {
         const result = restaurants
           .map(restaurant => ({
             ...restaurant.toJSON(),
-            description: restaurant.description.length < 50
+            description: restaurant.description?.length < 50
               ? restaurant.description
-              : restaurant.description.slice(0, 50) + '...',
+              : restaurant.description?.slice(0, 50) + '...',
             favoritedCount: restaurant.FavoritedUsers.length,
             isFavorited: user && user.FavoritedRestaurants.some(fr => fr.id === restaurant.id)
           }))

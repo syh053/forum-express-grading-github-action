@@ -88,7 +88,7 @@ const userController = {
         const temp = {}
 
         const newComments = comments.filter(comment => {
-          const restaurantId = comment.Restaurant.id
+          const restaurantId = comment.Restaurant?.id
           if (!(restaurantId in temp)) {
             temp[restaurantId] = ''
             return true
