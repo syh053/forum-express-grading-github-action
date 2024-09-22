@@ -28,7 +28,18 @@ const adminServices = {
         pagination: getPagination(limit, page, restaurants.count)
       }))
       .catch(err => cb(err))
+  },
+
+  deleteRestaurant: (req, cb) => {
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        if (restaurant === null) throw new Error("Couldn't delete any restaurant!!")
+        return restaurant.destroy()
+      })
+      .then(deleteRsetaurant => cb(null, { restaurant: deleteRsetaurant }))
+      .catch(err => cb(err))
   }
+
 }
 
 module.exports = adminServices
