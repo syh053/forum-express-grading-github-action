@@ -11,7 +11,7 @@ passport.use(new LocalStrategy({
 },
 (req, email, password, done) => {
   User.findOne({
-    attributes: ['id', 'name', 'email', 'password'],
+    attributes: ['id', 'name', 'email', 'password', 'isAdmin', 'image'],
     where: { email }
   })
     .then(user => {
