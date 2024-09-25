@@ -1,6 +1,9 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
+
 const { User, Restaurant } = require('../db/models')
 
 const bcrypt = require('bcryptjs')
@@ -15,14 +18,33 @@ passport.use(new LocalStrategy({
     where: { email }
   })
     .then(user => {
-      if (!user) return done(null, false, req.flash('error_messages', 'email or passport input error!!'))
-
+      if (!user) return done(null, false)
       bcrypt.compare(password, user.password)
         .then(ans => {
-          if (!ans) return done(null, false, req.flash('error_messages', 'email or passport input error!!'))
+          if (!ans) return done(null, false)
           return done(null, user)
         })
     })
+}))
+
+const opts = {}
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
+opts.secretOrKey = process.env.JWT_SECRET
+
+passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+  User.findByPk(jwtPayload.id, {
+    include: [
+      { model: Restaurant, as: 'FavoritedRestaurants' },
+      { model: Restaurant, as: 'LikeRestaurants' },
+      { model: User, as: 'Followings' },
+      { model: User, as: 'Followers' }
+    ]
+  })
+    .then(user => {
+      if (!user) return done(null, false)
+      return done(null, user)
+    })
+    .catch(err => done(err))
 }))
 
 passport.serializeUser((user, done) => {

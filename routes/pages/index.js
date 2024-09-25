@@ -23,13 +23,10 @@ const userController = require('../../controllers/pages/user-controller')
 const commentController = require('../../controllers/pages/comment-controller')
 
 // 載入 authenticated、authenticatedAdmin 狀態
-const { authenticated: auth, authenticatedAdmin: authAdmin } = require('../../middlewares/auth')
+const { localAuthenticated: localAuth, authenticated: auth, authenticatedAdmin: authAdmin } = require('../../middlewares/auth')
 
 // 載入錯誤 message
 const errMessage = require('../../middlewares/error-handler')
-
-// 引入設定好的 passport
-const passport = require('../../config/passport')
 
 router.use('/admin', authAdmin, admin)
 
@@ -45,7 +42,7 @@ router.post('/signup', userController.signUp)
 
 router.get('/signin', userController.signInPage)
 
-router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
+router.post('/signin', localAuth, userController.signIn)
 
 router.get('/logout', userController.signOut)
 
