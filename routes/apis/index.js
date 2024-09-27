@@ -18,6 +18,8 @@ router.use('/admin', auth, authAdmin, admin)
 
 router.post('/signin', localAuth, userController.signIn)
 
+router.post('/signup', userController.signUp)
+
 router.get('/restaurants', auth, restController.getRestaurants)
 
 router.use(errMessage.apiError)

@@ -1,36 +1,17 @@
-const bcrypt = require('bcryptjs')
-
 const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../../db/models')
+
+const userServices = require('../../services/user-services') // 載入 userServices
 
 const localFileHandler = require('../../helpers/file-helpers')
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
   signUp: (req, res, next) => {
-    const { name, email, password, passwordCheck } = req.body
-    // 建立正規表達式
-    const regex = /@/g
-
-    if (password !== passwordCheck) throw new Error('"Password Check" do not match "Password" !!')
-
-    if (!regex.test(email)) throw new Error('"email must contain "@" !!')
-
-    User.findOne({ where: { email } })
-      .then(user => {
-        if (user) throw new Error('This email is already exists!!')
-
-        return bcrypt.hash(password, 10)
-      })
-      .then(hash => User.create({
-        name,
-        email,
-        password: hash
-      }))
-      .then(() => {
-        req.flash('success_messages', 'create success!!')
-        res.redirect('/signin')
-      })
-      .catch(err => next(err)) // 錯誤處理
+    userServices.signUp(req, (err, result) => {
+      if (err) return next(err)
+      req.flash('success_messages', 'Sign up successfully!')
+      res.redirect('/signin')
+    })
   },
 
   signInPage: (req, res) => {
