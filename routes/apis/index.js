@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 
+const user = require('../apis/user') // 載入 user 路由
+
 const favorite = require('../apis/favorite') // 載入 favorite 路由
 
 const userController = require('../../controllers/apis/user-controller') // 載入 userController
@@ -18,6 +20,8 @@ const errMessage = require('../../middlewares/error-handler')
 const admin = require('../apis/modules/admin')
 
 router.use('/admin', auth, authAdmin, admin)
+
+router.use('/user', auth, user) // favorite 路由
 
 router.use('/favorite', auth, favorite) // favorite 路由
 

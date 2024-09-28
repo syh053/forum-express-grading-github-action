@@ -1,8 +1,6 @@
-const { User, Restaurant, Comment, Like, Followship } = require('../../db/models')
+const { User, Restaurant, Like, Followship } = require('../../db/models')
 
 const userServices = require('../../services/user-services') // 載入 userServices
-
-const localFileHandler = require('../../helpers/file-helpers')
 
 const userController = {
   signUpPage: (req, res) => res.render('signup'),
@@ -30,56 +28,7 @@ const userController = {
   },
 
   getUser: (req, res, next) => {
-    const { id } = req.params
-
-    return User.findByPk(id, {
-      // raw: true,
-      include: [
-        {
-          model: Comment,
-          include: Restaurant,
-          separate: true,
-          order: [['createdAt', 'DESC']]
-          // group: ['Restaurant.id'] // 用 sequelize 方法剔除重複評論的餐廳
-        },
-        {
-          model: User,
-          as: 'Followers'
-        },
-        {
-          model: User,
-          as: 'Followings'
-        },
-        {
-          model: Restaurant,
-          as: 'FavoritedRestaurants'
-        }
-      ]
-    })
-      .then(user => {
-        if (!user) throw new Error("User didn't found!")
-
-        /*
-        去除重複的餐廳 :
-        用 filter 遍歷每個 comments 內的餐廳 id，再用 if 判斷 temp 是否有重複的 key 值，
-        若沒有則新增 key 到 temp 中，並把 comment 加到 newComments。
-        */
-        const comments = user.toJSON().Comments
-
-        const temp = {}
-
-        const newComments = comments.filter(comment => {
-          const restaurantId = comment.Restaurant?.id
-          if (!(restaurantId in temp)) {
-            temp[restaurantId] = ''
-            return true
-          }
-          return false
-        })
-
-        res.render('users/profile', { user: user.toJSON(), comments: newComments })
-      })
-      .catch(err => next(err))
+    userServices.getUser(req, (err, result) => err ? next(err) : res.render('users/profile', result))
   },
 
   editUser: (req, res, next) => {
@@ -94,34 +43,12 @@ const userController = {
   },
 
   putUser: (req, res, next) => {
-    const { id } = req.params
-    const { name } = req.body
+    userServices.putUser(req, (err, result) => {
+      if (err) return next(err)
 
-    if (!name) throw new Error('name field is required!')
-
-    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
-
-    return Promise.all([ // 非同步處理
-      User.findByPk(id), // 去資料庫查有沒有這間餐廳
-      localFileHandler(file) // 把取出的檔案傳給 file-helper 處理後
-    ])
-      .then(([user, file]) => {
-        if (!user) throw Error("User didn't exist!")
-        if (Number(id) !== req.user.id) throw new Error('不能修改別人的資料!')
-
-        return user.update({
-          name,
-          email: user.email,
-          password: user.password,
-          isAdmin: user.isAdmin,
-          image: file || user.image // // 如果 file 是 Truthy (使用者有上傳新照片) 就用 file，如果是 Falsy (使用者沒有上傳新照片) 就沿用原本資料庫內的值
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', '使用者資料編輯成功') // 在畫面顯示成功提示
-        res.redirect(`/users/${id}`)
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', '使用者資料編輯成功!')
+      res.redirect(`/users/${req.params.id}`)
+    })
   },
 
   addFavorite: (req, res, next) => {

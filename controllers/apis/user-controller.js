@@ -24,6 +24,14 @@ const userController = {
     userServices.signUp(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   },
 
+  getUser: (req, res, next) => {
+    userServices.getUser(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  putUser: (req, res, next) => {
+    userServices.putUser(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
   addFavorite: (req, res, next) => {
     userServices.addFavorite(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   },
