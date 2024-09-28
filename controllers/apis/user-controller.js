@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+
 const userServices = require('../../services/user-services') // 載入 userServices
 
 const userController = {
@@ -21,6 +22,14 @@ const userController = {
 
   signUp: (req, res, next) => {
     userServices.signUp(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  addFavorite: (req, res, next) => {
+    userServices.addFavorite(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  removeFavorite: (req, res, next) => {
+    userServices.removeFavorite(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   }
 
 }

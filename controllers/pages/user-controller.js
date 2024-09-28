@@ -1,4 +1,4 @@
-const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../../db/models')
+const { User, Restaurant, Comment, Like, Followship } = require('../../db/models')
 
 const userServices = require('../../services/user-services') // 載入 userServices
 
@@ -125,47 +125,21 @@ const userController = {
   },
 
   addFavorite: (req, res, next) => {
-    const { restaurantId } = req.params
-    const userId = req.user.id
+    userServices.addFavorite(req, (err, result) => {
+      if (err) return next(err)
 
-    return Promise.all([
-      Restaurant.findByPk(restaurantId),
-      Favorite.findOne({
-        where: { userId, restaurantId }
-      })
-    ])
-      .then(([restaurant, favorite]) => {
-        if (!restaurant) throw new Error("Restaurant didn't exist!")
-        if (favorite) throw new Error('You have favorited this restaurant!')
-
-        return [Favorite.create({ restaurantId, userId }), restaurant]
-      })
-      .then(([create, restaurant]) => {
-        req.flash('success_messages', `成功收藏"${restaurant.name}"`)
-        res.redirect('back')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', 'success_messages', `成功收藏"${result.name}"`)
+      res.redirect('back')
+    })
   },
 
   removeFavorite: (req, res, next) => {
-    const { restaurantId } = req.params
-    const userId = req.user.id
+    userServices.removeFavorite(req, (err, result) => {
+      if (err) return next(err)
 
-    return Favorite.findOne({
-      where: { userId, restaurantId }
+      req.flash('success_messages', `成功移除"${result.name}"`)
+      res.redirect('back')
     })
-      .then(async favorite => {
-        if (!favorite) throw new Error("You haven't favorited this restaurant")
-
-        const restaurant = await Restaurant.findByPk(restaurantId, { raw: true })
-
-        return [favorite.destroy(), restaurant]
-      })
-      .then(([destroy, restaurant]) => {
-        req.flash('success_messages', `成功移除"${restaurant.name}"`)
-        res.redirect('back')
-      })
-      .catch(err => next(err))
   },
 
   addLike: (req, res, next) => {
