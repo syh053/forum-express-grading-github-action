@@ -3,7 +3,12 @@ const restaurantServices = require('../../services/restaurant-services') // è¼‰å
 const restaurantController = {
   getRestaurants: (req, res, next) => {
     restaurantServices.getRestaurants(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  getFeeds: (req, res, next) => {
+    restaurantServices.getFeeds(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   }
+
 }
 
 module.exports = restaurantController

@@ -27,6 +27,8 @@ router.post('/signup', userController.signUp)
 
 router.get('/restaurants', auth, restController.getRestaurants)
 
+router.get('/restaurants/feeds', auth, restController.getFeeds) // 查看最新 10 比餐廳、評論路由
+
 router.post('/comments', auth, commentController.postComment)
 
 router.delete('/comments/:id', auth, authAdmin, commentController.deleteComment) // 刪除評論路由

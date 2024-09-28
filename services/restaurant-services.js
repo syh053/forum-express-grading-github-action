@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../db/models') // 載入 Restaurant、User、Category、Comment 物件
+const { User, Restaurant, Category, Comment } = require('../db/models') // 載入 Restaurant、User、Category、Comment 物件
 
 const { getOffset, getPagination } = require('../helpers/pagination-helper') // 載入分頁 helper
 
@@ -47,7 +47,40 @@ const restaurantServices = {
         })
       })
       .catch(err => cb(err))
+  },
+
+  getFeeds: (req, cb) => {
+    Promise.all([
+      Restaurant.findAll({
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: Category,
+        limit: 4
+      }),
+      Comment.findAll({
+        raw: true,
+        nest: true,
+        order: [['createdAt', 'DESC']],
+        include: [User, Restaurant],
+        limit: 10
+      })
+    ])
+      .then(([restaurants, comments]) => {
+        const datas = restaurants.map(restaurant => (
+          {
+            ...restaurant,
+            description: restaurant.description?.length < 50
+              ? restaurant.description
+              : restaurant.description?.slice(0, 50) + '...'
+          }
+        ))
+
+        cb(null, { restaurants: datas, comments })
+      })
+      .catch(err => cb(err))
   }
+
 }
 
 module.exports = restaurantServices
