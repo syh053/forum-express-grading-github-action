@@ -29,6 +29,8 @@ router.get('/restaurants', auth, restController.getRestaurants)
 
 router.post('/comments', auth, commentController.postComment)
 
+router.delete('/comments/:id', auth, authAdmin, commentController.deleteComment) // 刪除評論路由
+
 router.use(errMessage.apiError)
 
 module.exports = router

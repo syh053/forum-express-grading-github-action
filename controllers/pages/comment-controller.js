@@ -1,5 +1,3 @@
-const { Comment, Restaurant } = require('../../db/models') // 載入 Comment、Restaurant 物件
-
 const commentServices = require('../../services/comment-services') // 載入 commentServices
 
 const commentController = {
@@ -14,20 +12,14 @@ const commentController = {
   },
 
   deleteComment: (req, res, next) => {
-    const { id } = req.params
+    commentServices.deleteComment(req, (err, result) => {
+      if (err) return next(err)
 
-    return Comment.findByPk(id, { include: Restaurant })
-      .then(comment => {
-        if (!comment) throw new Error("Comment didn't exist!")
-
-        return comment.destroy()
-      })
-      .then(deletedComment => {
-        req.flash('error_messages', '成功刪除留言!')
-        res.redirect(`/restaurants/${deletedComment.restaurantId}`)
-      })
-      .catch(err => next(err))
+      req.flash('error_messages', '成功刪除留言!')
+      res.redirect(`/restaurants/${result.Restaurant.id}`)
+    })
   }
+
 }
 
 module.exports = commentController

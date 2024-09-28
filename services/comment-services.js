@@ -20,7 +20,21 @@ const commentServices = {
       })
       .then(newComment => cb(null, newComment))
       .catch(err => cb(err))
+  },
+
+  deleteComment: (req, cb) => {
+    const { id } = req.params
+
+    return Comment.findByPk(id, { include: Restaurant })
+      .then(comment => {
+        if (!comment) throw new Error("Comment didn't exist!")
+
+        return comment.destroy()
+      })
+      .then(deletedComment => cb(null, deletedComment))
+      .catch(err => cb(err))
   }
+
 }
 
 module.exports = commentServices
