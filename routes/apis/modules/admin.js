@@ -14,4 +14,8 @@ router.post('/restaurants', upload.single('image'), adminController.postRestaura
 
 router.delete('/restaurant/:id', adminController.deleteRestaurant)
 
+router.patch('/users/:id', adminController.patchUser) // 變更使用者權限路由
+
+router.get('/users', adminController.getUsers) // 後台使用者頁面路由
+
 module.exports = router

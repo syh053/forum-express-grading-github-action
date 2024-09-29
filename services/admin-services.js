@@ -1,4 +1,4 @@
-const { Restaurant, Category } = require('../db/models') // 載入 Restaurant、User、Category 物件
+const { User, Restaurant, Category } = require('../db/models') // 載入 Restaurant、User、Category 物件
 
 const { getOffset, getPagination } = require('../helpers/pagination-helper') // 載入 pagination-helper
 
@@ -104,6 +104,27 @@ const adminServices = {
         return restaurant.destroy()
       })
       .then(deleteRsetaurant => cb(null, { restaurant: deleteRsetaurant }))
+      .catch(err => cb(err))
+  },
+
+  getUsers: (req, cb) => {
+    return User.findAll({ raw: true })
+      .then(users => cb(null, users))
+      .catch(err => cb(err))
+  },
+
+  patchUser: (req, cb) => {
+    const { id } = req.params
+    return User.findByPk(id)
+      .then(user => {
+        if (!user) throw new Error("Couldn't find any user!!")
+        if (user.email === 'root@example.com') return cb(null, user)
+
+        return user.update({
+          isAdmin: !user.isAdmin
+        })
+      })
+      .then(user => cb(null, user))
       .catch(err => cb(err))
   }
 

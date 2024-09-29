@@ -15,7 +15,22 @@ const adminController = {
 
   deleteRestaurant: (req, res, next) => {
     adminServices.deleteRestaurant(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  getUsers: (req, res, next) => {
+    adminServices.getUsers(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  patchUser: (req, res, next) => {
+    adminServices.patchUser(req, (err, result) => {
+      if (err) return next(err)
+
+      if (result.email === 'root@example.com') throw new Error('禁止變更 root 權限')
+
+      return res.json({ status: 'success', result })
+    })
   }
+
 }
 
 module.exports = adminController
