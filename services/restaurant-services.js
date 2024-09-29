@@ -89,6 +89,26 @@ const restaurantServices = {
       .catch(err => cb(err))
   },
 
+  getDashboard: (req, cb) => {
+    const { id } = req.params
+
+    return Restaurant.findByPk(id, {
+      // raw: true,
+      // nest: true,
+      include: [
+        Category,
+        Comment,
+        { model: User, as: 'FavoritedUsers' }
+      ]
+    })
+      .then(restaurant => {
+        if (!restaurant) throw new Error('Restaurant not found')
+
+        return cb(null, { restaurant: restaurant.toJSON() })
+      })
+      .catch(err => cb(err))
+  },
+
   getFeeds: (req, cb) => {
     Promise.all([
       Restaurant.findAll({

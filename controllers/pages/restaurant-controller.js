@@ -1,4 +1,4 @@
-const { Restaurant, User, Category, Comment } = require('../../db/models') // 載入 Restaurant、User、Category、Comment 物件
+const { Restaurant, User } = require('../../db/models') // 載入 Restaurant、User、Category、Comment 物件
 
 const restaurantServices = require('../../services/restaurant-services') // 載入 restaurantServices
 
@@ -14,22 +14,7 @@ const restaurantController = {
   },
 
   getDashboard: (req, res, next) => {
-    const { id } = req.params
-
-    return Restaurant.findByPk(id, {
-      // raw: true,
-      // nest: true,
-      include: [
-        Category,
-        Comment
-      ]
-    })
-      .then(restaurant => {
-        if (!restaurant) throw new Error('Restaurant not found')
-
-        return res.render('dashboard', { restaurant: restaurant.toJSON() })
-      })
-      .catch(err => next(err))
+    restaurantServices.getDashboard(req, (err, result) => err ? next(err) : res.render('dashboard', result))
   },
 
   getFeeds: (req, res, next) => {
