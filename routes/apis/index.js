@@ -41,11 +41,11 @@ router.get('/restaurants', auth, restController.getRestaurants)
 
 router.get('/restaurants/top', auth, restController.getTopRestaurants) // 查看前10名被收藏的餐廳訊息
 
+router.get('/restaurants/feeds', auth, restController.getFeeds) // 查看最新 10 比餐廳、評論路由
+
 router.get('/restaurants/:id', auth, restController.getRestaurant) // 查看單筆餐廳訊息
 
 router.get('/restaurants/:id/dashboard', auth, restController.getDashboard) // 查看單筆餐廳活動數據
-
-router.get('/restaurants/feeds', auth, restController.getFeeds) // 查看最新 10 比餐廳、評論路由
 
 router.post('/comments', auth, commentController.postComment)
 
