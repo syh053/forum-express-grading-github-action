@@ -68,6 +68,35 @@ const adminServices = {
       .catch(err => cb(err))
   },
 
+  putRestaurant: (req, cb) => {
+    const { name, categoryId, tel, address, openingHours, description } = req.body
+    if (!name) throw new Error('Missing name!!')
+    if (!categoryId) throw new Error('Missing name!!')
+
+    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+
+    return Promise.all([ // 非同步處理
+      Restaurant.findByPk(req.params.id), // 去資料庫查有沒有這間餐廳
+      localFileHandler(file)
+    ])
+
+      .then(([restaurant, file]) => {
+        if (!restaurant) throw Error("Couldn't find any restaurant!!")
+
+        return restaurant.update({
+          name,
+          categoryId,
+          tel,
+          address,
+          openingHours,
+          description,
+          image: file || restaurant.image // 如果 filePath 是 Truthy (使用者有上傳新照片) 就用 filePath，是 Falsy (使用者沒有上傳新照片) 就沿用原本資料庫內的值
+        })
+      })
+      .then(updateRestaurant => cb(null, updateRestaurant))
+      .catch(err => cb(err))
+  },
+
   deleteRestaurant: (req, cb) => {
     return Restaurant.findByPk(req.params.id)
       .then(restaurant => {

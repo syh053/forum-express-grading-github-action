@@ -1,5 +1,4 @@
 const { Restaurant, User, Category } = require('../../db/models') // 載入 Restaurant、User、Category 物件
-const localFileHandler = require('../../helpers/file-helpers') // 載入 file-helper
 const adminServices = require('../../services/admin-services')
 
 const adminController = {
@@ -32,39 +31,14 @@ const adminController = {
   },
 
   putRestaurant: (req, res, next) => {
-    const { name, categoryId, tel, address, openingHours, description } = req.body
-    if (!name) throw new Error('Missing name!!')
-    if (!categoryId) throw new Error('Missing name!!')
+    const { id } = req.params // 從路由提取動態 id
 
-    const { file } = req // 把檔案取出來，也可以寫成 const file = req.file
+    adminServices.putRestaurant(req, (err, result) => {
+      if (err) return next(err)
 
-    return Promise.all([ // 非同步處理
-      Restaurant.findByPk(req.params.id), // 去資料庫查有沒有這間餐廳
-      localFileHandler(file)
-    ])
-
-      .then(([restaurant, file]) => {
-        if (!restaurant) throw Error("Couldn't find any restaurant!!")
-
-        return restaurant.update({
-          name,
-          categoryId,
-          tel,
-          address,
-          openingHours,
-          description,
-          image: file || restaurant.image // 如果 filePath 是 Truthy (使用者有上傳新照片) 就用 filePath，是 Falsy (使用者沒有上傳新照片) 就沿用原本資料庫內的值
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', 'restaurant edited successfully!!') // 在畫面顯示成功提示
-        res.redirect('/admin/restaurants')
-      })
-      .catch(err => {
-        err.name = 'editeError'
-        err.message = 'edited fail!!'
-        next(err)
-      })
+      req.flash('success_messages', 'restaurant edited successfully!!') // 在畫面顯示成功提示
+      res.redirect(`/admin/restaurants/${id}`)// 導回餐廳頁
+    })
   },
 
   getRestaurants: (req, res, next) => {
