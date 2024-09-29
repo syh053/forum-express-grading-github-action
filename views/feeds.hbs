@@ -39,15 +39,24 @@
       </div>
       <div class="card-body">
         {{#each comments}}
-        <div>
-          <h4>
-            <a class="link-primary" href="/restaurants/{{this.Restaurant.id}}">{{this.Restaurant.name}}</a>
-          </h4>
-          <p class="my-4" style="white-space: break-spaces;">{{this.text}}</p>
-          - <a class="link-secondary" href="/users/{{this.User.id}}">{{this.User.name}}</a>
-          <small> 在 {{fromNow this.createdAt}}評論 </small>
-          <hr>
-        </div>
+          {{#if this.Restaurant.id}}
+            <div>
+              <h4>
+                <a class="link-primary" href="/restaurants/{{this.Restaurant.id}}">{{this.Restaurant.name}}</a>
+              </h4>
+              <p class="my-4" style="white-space: break-spaces;">{{this.text}}</p>
+              - <a class="link-secondary" href="/users/{{this.User.id}}">{{this.User.name}}</a>
+              <small> 在 {{fromNow this.createdAt}}評論 </small>
+              <hr>
+            </div>
+          {{else}}
+            <div>
+              <h4 style="color: brown;">餐廳已遭刪除</h4>
+              - <a class="link-secondary" href="/users/{{this.User.id}}">{{this.User.name}}</a>
+              <small> 在 {{fromNow this.createdAt}}評論 </small>
+              <hr>
+            </div>
+          {{/if}}
         {{/each}}
       </div>
     </div>

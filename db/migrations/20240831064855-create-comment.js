@@ -15,7 +15,13 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       restaurant_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Restaurants',
+          key: 'id'
+        },
+        onUpdate: 'SET NULL',
+        onDelete: 'SET NULL'
       },
       created_at: {
         allowNull: false,
