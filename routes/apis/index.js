@@ -35,6 +35,8 @@ router.delete('/following/:userId', auth, userController.removeFollowing) // 刪
 
 router.get('/restaurants', auth, restController.getRestaurants)
 
+router.get('/restaurants/top', auth, restController.getTopRestaurants) // 查看前10名被收藏的餐廳訊息
+
 router.get('/restaurants/:id', auth, restController.getRestaurant) // 查看單筆餐廳訊息
 
 router.get('/restaurants/:id/dashboard', auth, restController.getDashboard) // 查看單筆餐廳活動數據

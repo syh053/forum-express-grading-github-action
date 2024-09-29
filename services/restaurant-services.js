@@ -2,6 +2,8 @@ const { User, Restaurant, Category, Comment } = require('../db/models') // 載�
 
 const { getOffset, getPagination } = require('../helpers/pagination-helper') // 載入分頁 helper
 
+const { getUser } = require('../helpers/auth-helpers')
+
 const restaurantServices = {
   getRestaurants: (req, cb) => {
     const page = Number(req.query.page) || 1
@@ -137,6 +139,35 @@ const restaurantServices = {
         ))
 
         cb(null, { restaurants: datas, comments })
+      })
+      .catch(err => cb(err))
+  },
+
+  getTopRestaurants: (req, cb) => {
+    const user = getUser(req)
+
+    return Restaurant.findAll({
+      include: [
+        {
+          model: User,
+          as: 'FavoritedUsers'
+        }
+      ]
+    })
+      .then(restaurants => {
+        const result = restaurants
+          .map(restaurant => ({
+            ...restaurant.toJSON(),
+            description: restaurant.description?.length < 50
+              ? restaurant.description
+              : restaurant.description?.slice(0, 50) + '...',
+            favoritedCount: restaurant.FavoritedUsers.length,
+            isFavorited: user && user.FavoritedRestaurants.some(fr => fr.id === restaurant.id)
+          }))
+          .sort((a, b) => b.favoritedCount - a.favoritedCount)
+          .slice(0, 10)
+
+        return cb(null, { restaurants: result })
       })
       .catch(err => cb(err))
   }
