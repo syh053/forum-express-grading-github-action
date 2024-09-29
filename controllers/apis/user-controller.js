@@ -40,8 +40,16 @@ const userController = {
     userServices.removeFavorite(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   },
 
+  addLike: (req, res, next) => {
+    userServices.addLike(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
   addFollowing: (req, res, next) => {
     userServices.addFollowing(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  removeLike: (req, res, next) => {
+    userServices.removeLike(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   },
 
   removeFollowing: (req, res, next) => {

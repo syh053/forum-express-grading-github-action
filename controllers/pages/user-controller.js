@@ -1,4 +1,4 @@
-const { User, Restaurant, Like } = require('../../db/models')
+const { User } = require('../../db/models')
 
 const userServices = require('../../services/user-services') // 載入 userServices
 
@@ -70,43 +70,21 @@ const userController = {
   },
 
   addLike: (req, res, next) => {
-    const { restaurantId } = req.params
-    const userId = req.user.id
+    userServices.addLike(req, (err, result) => {
+      if (err) return next(err)
 
-    return Promise.all([
-      Restaurant.findByPk(restaurantId),
-      Like.findOne({ where: { userId, restaurantId } })
-    ])
-      .then(([restaurant, like]) => {
-        if (!restaurant) throw new Error("Restaurant didn't exist!")
-        if (like) throw new Error('You have liked this restaurant!')
-
-        return [Like.create({ restaurantId, userId }), restaurant]
-      })
-      .then(([create, restaurant]) => {
-        req.flash('success_messages', `like successful "${restaurant.name}" !!`)
-        res.redirect('back')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', `like successful "${result.name}" !!`)
+      res.redirect('back')
+    })
   },
 
   removeLike: (req, res, next) => {
-    const { restaurantId } = req.params
-    const userId = req.user.id
+    userServices.removeLike(req, (err, result) => {
+      if (err) return next(err)
 
-    return Like.findOne({ where: { userId, restaurantId } })
-      .then(async like => {
-        if (!like) throw new Error("You haven't liked this restaurant!")
-
-        const restaurant = await Restaurant.findByPk(restaurantId, { raw: true })
-
-        return [like.destroy(), restaurant]
-      })
-      .then(([destroy, restaurant]) => {
-        req.flash('success_messages', `unlike successful "${restaurant.name}"!!`)
-        res.redirect('back')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', `unlike successful "${result.name}"!!`)
+      res.redirect('back')
+    })
   },
 
   getTopUsers: (req, res, next) => {

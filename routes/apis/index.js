@@ -5,6 +5,8 @@ const user = require('../apis/user') // 載入 user 路由
 
 const favorite = require('../apis/favorite') // 載入 favorite 路由
 
+const like = require('../apis/like') // 載入 favorite 路由
+
 const userController = require('../../controllers/apis/user-controller') // 載入 userController
 
 const restController = require('../../controllers/apis/restaurant-controller') // 載入 restaurant-controller
@@ -24,6 +26,8 @@ router.use('/admin', auth, authAdmin, admin)
 router.use('/user', auth, user) // favorite 路由
 
 router.use('/favorite', auth, favorite) // favorite 路由
+
+router.use('/like', auth, like) // like 路由
 
 router.post('/signin', localAuth, userController.signIn)
 

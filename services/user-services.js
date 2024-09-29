@@ -1,4 +1,4 @@
-const { Restaurant, Comment, Favorite, Followship } = require('../db/models') // 載入 Restaurant, Favorite 物件
+const { Restaurant, Comment, Favorite, Like, Followship } = require('../db/models') // 載入 Restaurant, Favorite 物件
 
 const { User } = require('../db/models') // 載入 User
 const bcrypt = require('bcryptjs')
@@ -145,6 +145,40 @@ const userServices = {
         const restaurant = await Restaurant.findByPk(restaurantId, { raw: true })
 
         return [favorite.destroy(), restaurant]
+      })
+      .then(([destroy, restaurant]) => cb(null, restaurant))
+      .catch(err => cb(err))
+  },
+
+  addLike: (req, cb) => {
+    const { restaurantId } = req.params
+    const userId = req.user.id
+
+    return Promise.all([
+      Restaurant.findByPk(restaurantId, { raw: true }),
+      Like.findOne({ where: { userId, restaurantId } })
+    ])
+      .then(([restaurant, like]) => {
+        if (!restaurant) throw new Error("Restaurant didn't exist!")
+        if (like) throw new Error('You have liked this restaurant!')
+
+        return [Like.create({ restaurantId, userId }), restaurant]
+      })
+      .then(([create, restaurant]) => cb(null, restaurant))
+      .catch(err => cb(err))
+  },
+
+  removeLike: (req, cb) => {
+    const { restaurantId } = req.params
+    const userId = req.user.id
+
+    return Like.findOne({ where: { userId, restaurantId } })
+      .then(async like => {
+        if (!like) throw new Error("You haven't liked this restaurant!")
+
+        const restaurant = await Restaurant.findByPk(restaurantId, { raw: true })
+
+        return [like.destroy(), restaurant]
       })
       .then(([destroy, restaurant]) => cb(null, restaurant))
       .catch(err => cb(err))
