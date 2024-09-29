@@ -49,6 +49,46 @@ const restaurantServices = {
       .catch(err => cb(err))
   },
 
+  getRestaurant: (req, cb) => {
+    const { id } = req.params
+
+    return Restaurant.findByPk(id, {
+      include: [
+        Category,
+        {
+          model: Comment,
+          include: User,
+          separate: true,
+          order: [['createdAt', 'DESC']]
+        },
+        {
+          model: User,
+          as: 'FavoritedUsers'
+        },
+        {
+          model: User,
+          as: 'LikeUsers'
+        }
+      ]
+    })
+      .then(restaurant => {
+        if (!restaurant) throw new Error('Restaurant not found')
+
+        return restaurant.increment('viewCounts')
+      })
+      .then(restaurant => {
+        const isFavorited = restaurant.FavoritedUsers.some(fs => fs.id === req.user.id)
+        const isLiked = restaurant.LikeUsers.some(ls => ls.id === req.user.id)
+
+        return cb(null, {
+          restaurant: restaurant.toJSON(),
+          isFavorited,
+          isLiked
+        })
+      })
+      .catch(err => cb(err))
+  },
+
   getFeeds: (req, cb) => {
     Promise.all([
       Restaurant.findAll({
