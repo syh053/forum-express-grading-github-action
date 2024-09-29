@@ -38,6 +38,14 @@ const userController = {
 
   removeFavorite: (req, res, next) => {
     userServices.removeFavorite(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  addFollowing: (req, res, next) => {
+    userServices.addFollowing(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
+  removeFollowing: (req, res, next) => {
+    userServices.removeFollowing(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   }
 
 }

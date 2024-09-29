@@ -29,6 +29,10 @@ router.post('/signin', localAuth, userController.signIn)
 
 router.post('/signup', userController.signUp)
 
+router.post('/following/:userId', auth, userController.addFollowing) // 追蹤使用者
+
+router.delete('/following/:userId', auth, userController.removeFollowing) // 刪除追蹤
+
 router.get('/restaurants', auth, restController.getRestaurants)
 
 router.get('/restaurants/feeds', auth, restController.getFeeds) // 查看最新 10 比餐廳、評論路由

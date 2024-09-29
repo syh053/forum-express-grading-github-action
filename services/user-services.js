@@ -1,4 +1,4 @@
-const { Restaurant, Comment, Favorite } = require('../db/models') // 載入 Restaurant, Favorite 物件
+const { Restaurant, Comment, Favorite, Followship } = require('../db/models') // 載入 Restaurant, Favorite 物件
 
 const { User } = require('../db/models') // 載入 User
 const bcrypt = require('bcryptjs')
@@ -147,6 +147,51 @@ const userServices = {
         return [favorite.destroy(), restaurant]
       })
       .then(([destroy, restaurant]) => cb(null, restaurant))
+      .catch(err => cb(err))
+  },
+
+  addFollowing: (req, cb) => {
+    const { userId } = req.params
+
+    return Promise.all([
+      User.findByPk(userId, { raw: true }),
+      Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: userId
+        }
+      })
+    ])
+      .then(([user, followship]) => {
+        if (!user) throw new Error("User didn't exist!")
+        if (followship) throw new Error('You are already following this user!')
+
+        return Followship.create({
+          followerId: req.user.id,
+          followingId: userId
+        })
+      })
+      .then(newFollowship => cb(null, newFollowship))
+      .catch(err => cb(err))
+  },
+
+  removeFollowing: (req, cb) => {
+    const { userId } = req.params
+
+    return Followship.findOne({
+      where: {
+        followerId: req.user.id,
+        followingId: userId
+      }
+    })
+      .then(followship => {
+        if (!followship) throw new Error("You haven't followed this user!")
+
+        return followship.destroy({
+          where: { followingId: userId }
+        })
+      })
+      .then(destroy => cb(null, destroy))
       .catch(err => cb(err))
   }
 

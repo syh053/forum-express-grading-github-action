@@ -1,4 +1,4 @@
-const { User, Restaurant, Like, Followship } = require('../../db/models')
+const { User, Restaurant, Like } = require('../../db/models')
 
 const userServices = require('../../services/user-services') // 載入 userServices
 
@@ -133,54 +133,21 @@ const userController = {
   },
 
   addFollowing: (req, res, next) => {
-    const { userId } = req.params
+    userServices.addFollowing(req, (err, result) => {
+      if (err) return next(err)
 
-    return Promise.all([
-      User.findByPk(userId, { raw: true }),
-      Followship.findOne({
-        where: {
-          followerId: req.user.id,
-          followingId: userId
-        }
-      })
-    ])
-      .then(([user, followship]) => {
-        if (!user) throw new Error("User didn't exist!")
-        if (followship) throw new Error('You are already following this user!')
-
-        return Followship.create({
-          followerId: req.user.id,
-          followingId: userId
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', '追蹤成功!')
-        res.redirect('back')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', '追蹤成功!')
+      res.redirect('back')
+    })
   },
 
   removeFollowing: (req, res, next) => {
-    const { userId } = req.params
+    userServices.removeFollowing(req, (err, result) => {
+      if (err) return next(err)
 
-    return Followship.findOne({
-      where: {
-        followerId: req.user.id,
-        followingId: userId
-      }
+      req.flash('success_messages', '取消追蹤成功!')
+      res.redirect('back')
     })
-      .then(followship => {
-        if (!followship) throw new Error("You haven't followed this user!")
-
-        return followship.destroy({
-          where: { followingId: userId }
-        })
-      })
-      .then(() => {
-        req.flash('success_messages', '取消追蹤成功!')
-        res.redirect('back')
-      })
-      .catch(err => next(err))
   }
 
 }
