@@ -8,6 +8,8 @@ const adminController = require('../../../controllers/apis/admin-controller')
 
 router.get('/restaurants', adminController.getRestaurants)
 
+router.get('/restaurants/:id', adminController.getRestaurant)
+
 router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
 
 router.delete('/restaurant/:id', adminController.deleteRestaurant)

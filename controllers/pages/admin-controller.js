@@ -4,20 +4,11 @@ const adminServices = require('../../services/admin-services')
 
 const adminController = {
   getRestaurant: (req, res, next) => {
-    return Restaurant.findByPk(req.params.id, {
-      raw: true,
-      nest: true,
-      include: Category
+    adminServices.getRestaurant(req, (err, result) => {
+      if (err) throw new Error("Couldn't find any restaurant!!")
+
+      res.render('admin/restaurant', { restaurant: result })
     })
-      .then(restaurant => {
-        if (!restaurant) throw Error("Couldn't find any restaurant!!")
-        res.render('admin/restaurant', { restaurant })
-      })
-      .catch(err => {
-        err.name = '搜尋單筆餐廳'
-        err.message = '資料庫查找錯誤!!'
-        next(err)
-      })
   },
 
   editRestaurant: (req, res, next) => {

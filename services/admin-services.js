@@ -32,6 +32,19 @@ const adminServices = {
       .catch(err => cb(err))
   },
 
+  getRestaurant: (req, cb) => {
+    return Restaurant.findByPk(req.params.id, {
+      raw: true,
+      nest: true,
+      include: Category
+    })
+      .then(restaurant => {
+        if (!restaurant) throw Error("Couldn't find any restaurant!!")
+        return cb(null, restaurant)
+      })
+      .catch(err => cb(err))
+  },
+
   postRestaurant: (req, cb) => {
     console.log(req.body)
     const { name, categoryId, tel, address, openingHours, description } = req.body
