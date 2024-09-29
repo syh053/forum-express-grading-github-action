@@ -1,63 +1,41 @@
-const { Category } = require('../../db/models') // 載入 Category 物件
+const categoryServices = require('../../services/category-services')
 
 const categoryController = {
   getCategories: (req, res, next) => {
-    const { id } = req.params
+    categoryServices.getCategories(req, (err, result) => {
+      if (err) return next(err)
 
-    return Promise.all([
-      Category.findAll({ raw: true }),
-      id ? Category.findByPk(id, { raw: true }) : null
-    ])
-      .then(([categories, category]) => res.render('admin/categories', { category, categories }))
-      .catch(err => next(err))
+      res.render('admin/categories', result)
+    })
   },
 
   postCategory: (req, res, next) => {
-    const { name } = req.body
+    categoryServices.postCategory(req, (err, result) => {
+      if (err) return next(err)
 
-    if (!name) throw new Error('請輸入名稱!')
-
-    Category.create({ name })
-      .then(() => {
-        req.flash('success_messages', '分類建立成功')
-        res.redirect('/admin/categories')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', '分類建立成功')
+      res.redirect('/admin/categories')
+    })
   },
 
   putCategory: (req, res, next) => {
-    const { id } = req.params
-    const { name } = req.body
+    categoryServices.putCategory(req, (err, result) => {
+      if (err) return next(err)
 
-    if (!name) throw new Error('名稱不得為空!')
-
-    return Category.findByPk(id)
-      .then(category => {
-        if (!category) throw new Error('分類不存在!')
-        return category.update({ name })
-      })
-      .then(() => {
-        req.flash('success_messages', '分類修改成功')
-        return res.redirect('/admin/categories')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', '分類修改成功')
+      return res.redirect('/admin/categories')
+    })
   },
 
   deleteCategory: (req, res, next) => {
-    const { id } = req.params
+    categoryServices.deleteCategory(req, (err, result) => {
+      if (err) return next(err)
 
-    Category.findByPk(id)
-      .then(category => {
-        if (!category) throw new Error('分類不存在!')
-
-        return category.destroy()
-      })
-      .then(() => {
-        req.flash('success_messages', '分類刪除成功!')
-        res.redirect('/admin/categories')
-      })
-      .catch(err => next(err))
+      req.flash('success_messages', '分類刪除成功!')
+      res.redirect('/admin/categories')
+    })
   }
+
 }
 
 module.exports = categoryController
