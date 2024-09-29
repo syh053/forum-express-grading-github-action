@@ -52,6 +52,10 @@ const userController = {
     userServices.removeLike(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   },
 
+  getTopUsers: (req, res, next) => {
+    userServices.getTopUsers(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
+  },
+
   removeFollowing: (req, res, next) => {
     userServices.removeFollowing(req, (err, result) => err ? next(err) : res.json({ status: 'success', result }))
   }

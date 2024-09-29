@@ -6,6 +6,8 @@ const userController = require('../../controllers/apis/user-controller') // 載�
 
 const upload = require('../../middlewares/multer')
 
+router.get('/top', userController.getTopUsers) // 追蹤人數
+
 router.get('/:id', userController.getUser)
 
 router.put('/:id', upload.single('image'), userController.putUser)
