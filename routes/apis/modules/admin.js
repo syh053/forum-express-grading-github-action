@@ -14,6 +14,8 @@ router.get('/restaurants/:id', adminController.getRestaurant)
 
 router.post('/restaurants', upload.single('image'), adminController.postRestaurant)
 
+router.put('/restaurants/:id/edit', upload.single('image'), adminController.putRestaurant) // 修改餐廳路由
+
 router.delete('/restaurant/:id', adminController.deleteRestaurant)
 
 router.patch('/users/:id', adminController.patchUser) // 變更使用者權限路由
