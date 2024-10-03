@@ -12,8 +12,6 @@
 
 * API 登入使用 passport-jwt 實作 token-based 驗證登入
 
-
-
 ## 應用程式畫面
 
 登入頁
@@ -27,6 +25,13 @@
 後台頁面
 
 ![後台頁面](https://ppt.cc/flV9ax@.png)
+
+種子帳號：
+- Admin : email: root@example.com, password: 12345678
+- user1 : email: user1@example.com, password: 12345678
+- user2 : email: user2@example.com, password: 12345678
+
+## API
 
 API 完整說明可以查看 **[API 使用說明](https://luminous-whistle-d3b.notion.site/ALPHA-Camp-111e574ad60b80f29718c09bdd3c2db0)**
 
