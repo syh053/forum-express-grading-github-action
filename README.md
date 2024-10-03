@@ -1,52 +1,80 @@
 # README
 
+## 應用程式說明
+
+* 使用 express 打造的餐廳論壇網站
+
+* 實作 MVC 實作 express-handlebars 頁面渲染與 API 伺服器
+
+* 實作 RESTful APIs 路由設計
+
+* MVC 登入使用 passport-local 實作帳號、密碼驗證登入
+
+* API 登入使用 passport-jwt 實作 token-based 驗證登入
+
+
+
+## 應用程式畫面
+
+登入頁
+
+![登入](https://ppt.cc/fA6Drx@.png)
+
+登入後頁面
+
+![登入後頁面](https://ppt.cc/fG7gEx@.png)
+
+後台頁面
+
+![後台頁面](https://ppt.cc/flV9ax@.png)
+
+API 完整說明可以查看 **[API 使用說明](https://luminous-whistle-d3b.notion.site/ALPHA-Camp-111e574ad60b80f29718c09bdd3c2db0)**
+
+| 方法  | URL               |
+|-------|-------------------|
+| GET   | /api/restaurants   |
+
+## 檔案下載
+
 1. Fork
 2. git clone
 
-## 初始化
-### Initialize
+## 初始化(Initialize)
+
+安裝相關套件
+
 ```
-git remote add upstream https://github.com/ALPHACamp/forum-express-grading.git  # 建立上游連線
 npm install
 ```
 
-### 設定資料庫
-需要與 config/config.json 一致
+設定環境變數
+* 建立 .env 檔案
+* 新增變數 JWT_SECRET 
+
+![還境變數](https://ppt.cc/fZoeex@.png)
+
+## 設定資料庫
+
+需要與 config/database.js 一致
 
 ```
 create database forum;
 ```
 
+使用 migration 在資料庫建立資料表
+
+```
+npx sequelize db:migrate
+```
+
+建立種子資料
+
+```
+npx sequelize db:seed:all
+```
+
 ### 執行測試
+
 ```
 npm run test
 ```
-
-## 下載作業規格
-以 R01 為例
-
-```
-git checkout -b R01           # 開新分支
-git merge origin/R01-test     # 下載作業規格
-npm run test                  # 直到綠燈全亮
-
-git add .
-git commit -m "...."
-```
-
-## 繳交作業
-
-```
-git push origin R01           # 上傳本地進度
-```
-
-接著改成到 GitHub 來發 PR。
-
-## 共用帳號
-請一律設定下面 2 組帳號以利驗收：
-* 第一組帳號有 admin 權限：
-  * email: root@example.com
-  * password: 12345678
-* 第二組帳號沒有 admin 權限：
-  * email: user1@example.com
-  * password: 12345678
